@@ -1,6 +1,5 @@
 #ifndef ENEMY_H
 #define ENEMY_H
-
 #include "CollisionObject.h"
 #include "GameContext.h"
 
@@ -25,6 +24,13 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+
+private:
+        bool isAlive;
+        CMPUT350::Point2D enemyLoc;
+        CMPUT350::Rect sBounds;
+         
+
 };
 
 
