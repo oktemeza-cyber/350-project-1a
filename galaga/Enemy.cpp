@@ -2,11 +2,7 @@
 #include "Bullet.h"
 
 
-Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), enemyLoc(loc), sBounds(enemyLoc, 30)
-{
-    // TODO: Update code
-    
-}
+Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), enemyLoc(loc), sBounds(enemyLoc, 30){}
 
 void Enemy::Initialize(CMPUT350::GameContext* context)
 {
@@ -41,8 +37,13 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
-    //left empty for bullet implementation, come back to finish
+    Bullet* bullet = dynamic_cast<Bullet*>(obj.get());
+        if(bullet != nullptr && bullet->IsPlayerBullet()){
+            Kill();  
+            bullet->Kill();
+        }  
 }
+//check if the bullet exists and the bullet is a player bullet, then kill the enemy and the bullet
 
 void Enemy::Kill()
 {
