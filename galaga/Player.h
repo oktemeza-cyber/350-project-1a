@@ -3,6 +3,8 @@
 
 #include "CollisionObject.h"
 
+class Bullet;
+
 class Player : public CMPUT350::CollisionObject
 {
 public:
@@ -24,6 +26,14 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+
+private:
+    bool isAlive;
+    CMPUT350::Point2D playerLocation;
+    CMPUT350::Rect playerBounds;
+    bool movingLeft;
+    bool movingRight;
+    Bullet* activeBullets[2];
 
 };
 

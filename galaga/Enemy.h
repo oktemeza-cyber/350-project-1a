@@ -26,9 +26,9 @@ public:
     const CMPUT350::Rect& GetBounds() override;
 
 private:
-        bool isAlive;
-        CMPUT350::Point2D enemyLoc;
-        CMPUT350::Rect sBounds;
+    bool isAlive;
+    CMPUT350::Point2D enemyLoc;
+    CMPUT350::Rect sBounds;
          
 
 };
