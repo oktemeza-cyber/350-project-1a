@@ -135,7 +135,7 @@ struct Line {
         return p1 + (ab * projection); // Simplified version of the calculation in class
     }
     bool Crosses(Line other, Point2D &crossingPoint) const {
-        // Check if two lines cross, and change crossing point (I might need to recheck this one)
+        // Check if two lines cross, and change crossing point
         Point2D ab = p2 - p1; // Translation a = p1, b = p2, x = other.p1, y = other.p2
         Point2D xy = other.p2 - other.p1;
         Point2D ax = other.p1 - p1;
@@ -187,7 +187,6 @@ struct Rect {
 
     Rect(float left, float top, float width, float height)
         : topLeft(Point2D(left, top)), width(width), height(height) {} 
-        //This was changed from template, but having x be the left/right and y be up/down makes more sense
 
     Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
 
@@ -262,7 +261,7 @@ struct Rect {
         // Add a point to this rectangle's position (but not changing this one)
         return Rect(topLeft + other, width, height);
     }
-    void Inset(int inset) { // should this be an int?
+    void Inset(float inset) {
         // Moves all edges inwards by this amount
         topLeft += inset;
         height -= inset * 2;
