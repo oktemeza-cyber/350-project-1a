@@ -241,11 +241,8 @@ struct Rect {
         float top = std::max(topLeft.y, other.topLeft.y);
         float right = std::min(topLeft.x + width, other.topLeft.x + other.width);
         float bottom = std::min(topLeft.y + height, other.topLeft.y + other.height);
-        if (right < left || bottom < top) { // No overlap
-            height = 0;
-            width = 0;
-            return *this;
-        }
+        // NOTE: Originally had this function zero out the rectangle, it now just creates negative rectangles;
+        // if wanting to change functionally, the check is (right < left || bottom < top)
         topLeft.x = left;
         topLeft.y = top;
         width = right - left;
