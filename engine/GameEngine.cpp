@@ -1,10 +1,11 @@
 #include "GameEngine.h"
+#include <memory>
 
 /// @brief
 namespace CMPUT350 {
 #include "FontData.h"
 
-void RemoveDead() {
+void GameEngine::RemoveDead() {
     // Taken from asteroids
     std::vector<shared_ptr<GameObject>> aux;
     aux.reserve(mGameObjects.size());
@@ -18,26 +19,24 @@ void RemoveDead() {
 
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
     // Sample font loading code
-    if (!mFont->openFromMemory(&_font, _font_len)) // I uncommented this, but I'm not sure if it needs more work
+    mFont = std::make_shared<sf::Font>();
+    if (!mFont->openFromMemory(&_font, _font_len))
     {
         fprintf(stderr, "WARNING: Font did not load.\n");
     }
 
-    sf::RenderWindow mWindow(sf::VideoMode(sf::Vector2u(width, height)), "Galaga"); //I think this is how a window is setup
+    mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(width, height)), name); //I think this is how a window is setup
+    mWindow->setFramerateLimit(30);
+    mWindow->setKeyRepeatEnabled(false);
 }
 
 GameEngine::~GameEngine() {
     // Cleanup resources
     mWindow->close();
-
-    //Kill objects
-    for (const auto& obj : mGameObjects) {
-        obj.reset(); //This is delete for shared_ptrs
-    }
 }
 
 void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
-    mGameObjects.push_back(gameObject);
+    mPending.push_back(gameObject);
 }
 
 /**
@@ -47,36 +46,70 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
  * all objects have been destroyed.
  */
 void GameEngine::Run() {
-    while (true)  // window is open
+    DrawContext mDContext(mWindow, mFont);
+
+    GameContext mGContext = nullptr;
+    mContext.mEngineView = this;
+    mContext.ScreenContext = &mDContext;
+
+    while (mWindow->isOpen())  // window is open
     {
         // 0. Remove any objects that are now dead
         RemoveDead();
 
         // 1. Activate and initialize any objects added during the last frame
+        for (auto& newObj : mPending) {
+            newObj->Initialize();
+            mGameObjects.push_back(newObj);
+        }
+        mPending.clear();
 
         // 2. Process events
+        ProcessEvents(&mGContext);
 
         // 3. Update game objects
-        for (const auto& obj : mGameObjects) {
+        for (auto& obj : mGameObjects) {
             obj->Update();
         }
 
         // 4. Process collision events
+        for (size_t i = 0; i < mGameObjects.size(); i++){ //Straight from description
+            std::shared_ptr<CollisionObject> objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);
+            if (objA == nullptr) continue; // Not a collision object, skip
+            for (size_t j = 0; j < mGameObjects.size(); j++){
+                std::shared_ptr<CollisionObject> objB = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[j]);
+                if (objB == nullptr) continue;
+                if (i == j) continue;
+                objA->CollisionEnter(objB);
+            }
+        }
 
         // 5. Late updates
-        for (const auto& obj : mGameObjects) {
+        for (auto& obj : mGameObjects) {
             obj->LateUpdate();
         }
 
         // Clear window
-        window.clear(CMPUT350::Colors::black);
+        mWindow.clear(sf::Color::black);
 
         // 6. Render background
+        for (size_t i = 0; i < mGameObjects.size(); i++){
+            std::shared_ptr<GraphicsObject> objA = std::dynamic_pointer_cast<GraphicsObject>(mGameObjects[i]);
+            if (objA == nullptr) continue; // Not a graphics object, skip
+            objA->RenderBackground(&mGContext);
+        }
 
         // 7. Render foreground
+        for (size_t i = 0; i < mGameObjects.size(); i++){
+            std::shared_ptr<GraphicsObject> objA = std::dynamic_pointer_cast<GraphicsObject>(mGameObjects[i]);
+            if (objA == nullptr) continue; // Not a graphics object, skip
+            objA->RenderForeground(&mGContext);
+        }
 
         // Actually render to window
-        
+        mWindow.display();
+
+        if (mGameObjects.empty()) break;
     }
 }
 
@@ -85,29 +118,27 @@ void GameEngine::Run() {
 bool GameEngine::ProcessEvents(GameContext *context)
 {
 	while (const std::optional event = mWindow->pollEvent())
-	{
-		if (event->is<sf::Event::Closed>())
-		{
+    {
+        if (event->is<sf::Event::Closed>())
+        {
             delete this;
-		}
-		else if (event->is<sf::Event::Resized>())
-		{
-            // Not quite sure what goes here, DrawContexts seems to handle it
-		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-		{
-			// use keyPressed->unicode to get character
-            if (keyPressed->unicode == ' '){
-                // I'm not quite sure what to call
+            return true;
+        }
+        else if (event->is<sf::Event::Resized>())
+        {
+            mWindow->setView(sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f(resized->size)))) //...I think?
+            return true;
+        }
+        else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
+        {
+            // use keyPressed->unicode to get character
+            for (auto& obj : mGameObjects) {
+                obj->HandleKeyEvent(context, keyPressed->unicode);
             }
-            if (keyPressed->unicode == 'a'){
-
-            }
-            if (keyPressed->unicode == 'd'){
-
-            }
-		}
-	}
+            return true;
+        }
+        return false;
+    }
 }
 
 
