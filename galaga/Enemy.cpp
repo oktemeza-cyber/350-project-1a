@@ -2,7 +2,7 @@
 #include "Bullet.h"
 
 
-Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), enemyLoc(loc), sBounds(enemyLoc, 30){}
+Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), enemyLoc(loc), sBounds(enemyLoc, 30.0f){}
 
 void Enemy::Initialize(CMPUT350::GameContext* context)
 {

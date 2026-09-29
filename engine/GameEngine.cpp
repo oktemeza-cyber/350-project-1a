@@ -125,7 +125,7 @@ bool GameEngine::ProcessEvents(GameContext *context)
     {
         if (event->is<sf::Event::Closed>())
         {
-            delete this;
+            mWindow->close();
             return true;
         }
         else if (event->is<sf::Event::Resized>())

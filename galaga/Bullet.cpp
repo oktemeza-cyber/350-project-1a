@@ -30,6 +30,7 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 bool Bullet::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     //No key events for a bullet--The ship should spawn it in instead
+    return false;
 }
 
 void Bullet::RenderBackground(CMPUT350::GameContext* context)

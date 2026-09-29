@@ -12,12 +12,12 @@ void Player::Initialize(CMPUT350::GameContext* context){}
 
 void Player::Update(CMPUT350::GameContext* context)
 {
-    if(movingLeft){
-        playerLocation.x -= 5.0;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
+        playerLocation.x -= 5.0f;
     }
 
-    if(movingRight){
-        playerLocation += 5.0;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
+        playerLocation.x += 5.0f;
     }
 
     if(playerLocation.x < 0){
@@ -47,21 +47,6 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
-    if(key == 'a'){
-        movingLeft = true;
-        return true;
-    } else{
-        movingLeft = false;
-        return true;
-    }
-    
-    if(key == 'd'){
-        movingRight = true;
-        return true;
-    } else{
-        movingRight = false;
-        return true;
-    }
 
     
     if(key == ' '){
@@ -69,10 +54,10 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
             if(activeBullets[i] == nullptr){
                 Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, -1), true);
                 activeBullets[i] = createdBullet;
-                //context->mEngineView->AddGameObject(createdBullet); wait till this is implemented
                 break;
             }
         }
+        return true;
     }
     
     return false;
@@ -85,6 +70,16 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     //not implemented yet until game engine functions to check Rect shapes and testing
+    CMPUT350::Rect shipBody(playerLocation.x - 5.0f, playerLocation.y - 20.0f, 10.0f,30.0f);
+    CMPUT350::Rect wings(playerLocation.x - 20.0f, playerLocation.y - 10.0f, 40.0f, 10.0f);
+    CMPUT350::Rect wings2(playerLocation.x - 13.0f, playerLocation.y - 5.0f, 25.0f, 10.0f);
+    CMPUT350::Rect cockpit(playerLocation.x - 3.0f, playerLocation.y - 20.0f, 6.0, 6.0f);
+
+    
+    context->ScreenContext->DrawRect(wings, CMPUT350::Colors::red);
+    context->ScreenContext->DrawRect(wings2, CMPUT350::Colors::red);
+    context->ScreenContext->DrawRect(shipBody, CMPUT350::Colors::cyan);
+    context->ScreenContext->DrawRect(cockpit, CMPUT350::Colors::yellow);
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
