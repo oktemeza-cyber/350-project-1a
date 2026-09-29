@@ -128,9 +128,9 @@ bool GameEngine::ProcessEvents(GameContext *context)
             delete this;
             return true;
         }
-        else if (const auto* resized = event->is<sf::Event::Resized>())
+        else if (event->is<sf::Event::Resized>())
         {
-            mWindow->setView(sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f(resized->size)))); //This should work.
+            // I dunno i'll fix this later, I need research here
             return true;
         }
         else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
@@ -141,8 +141,8 @@ bool GameEngine::ProcessEvents(GameContext *context)
             }
             return true;
         }
+        return false;
     }
-    return false;
 }
 
 
