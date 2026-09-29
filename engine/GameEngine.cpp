@@ -1,5 +1,7 @@
 #include "GameEngine.h"
 #include <memory>
+#include "CollisionObject.h"
+#include "GraphicObject.h"
 
 /// @brief
 namespace CMPUT350 {
@@ -7,10 +9,10 @@ namespace CMPUT350 {
 
 void GameEngine::RemoveDead() {
     // Taken from asteroids
-    std::vector<shared_ptr<GameObject>> aux;
+    std::vector<std::shared_ptr<GameObject>> aux;
     aux.reserve(mGameObjects.size());
     for (const auto& obj : mGameObjects) {
-        if (obj.isAlive) {
+        if (obj->IsAlive()) {
             aux.push_back(obj);
         }
     }
@@ -48,9 +50,9 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
 void GameEngine::Run() {
     DrawContext mDContext(mWindow, mFont);
 
-    GameContext mGContext = nullptr;
-    mContext.mEngineView = this;
-    mContext.ScreenContext = &mDContext;
+    GameContext mGContext;
+    mGContext.mEngineView = this;
+    mGContext.ScreenContext = &mDContext;
 
     while (mWindow->isOpen())  // window is open
     {
@@ -59,17 +61,17 @@ void GameEngine::Run() {
 
         // 1. Activate and initialize any objects added during the last frame
         for (auto& newObj : mPending) {
-            newObj->Initialize();
+            newObj->Initialize(&mGContext);
             mGameObjects.push_back(newObj);
         }
         mPending.clear();
 
         // 2. Process events
-        ProcessEvents(&mGContext);
+        GameEngine::ProcessEvents(&mGContext);
 
         // 3. Update game objects
         for (auto& obj : mGameObjects) {
-            obj->Update();
+            obj->Update(&mGContext);
         }
 
         // 4. Process collision events
@@ -86,11 +88,11 @@ void GameEngine::Run() {
 
         // 5. Late updates
         for (auto& obj : mGameObjects) {
-            obj->LateUpdate();
+            obj->LateUpdate(&mGContext);
         }
 
         // Clear window
-        mWindow.clear(sf::Color::black);
+        mWindow->clear(sf::Color::black);
 
         // 6. Render background
         for (size_t i = 0; i < mGameObjects.size(); i++){
@@ -107,7 +109,7 @@ void GameEngine::Run() {
         }
 
         // Actually render to window
-        mWindow.display();
+        mWindow->display();
 
         if (mGameObjects.empty()) break;
     }
