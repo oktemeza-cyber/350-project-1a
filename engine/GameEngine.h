@@ -32,6 +32,7 @@ public:
 
 private:
     void RemoveDead();
+    bool GameEngine::ProcessEvents(GameContext *context)
 
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;

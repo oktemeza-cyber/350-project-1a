@@ -2,6 +2,8 @@
 #include <memory>
 #include "CollisionObject.h"
 #include "GraphicsObject.h"
+#include "DrawContext.h"
+#include "GameContext.h"
 
 /// @brief
 namespace CMPUT350 {
@@ -92,7 +94,7 @@ void GameEngine::Run() {
         }
 
         // Clear window
-        mWindow->clear(sf::Color::black);
+        mWindow->clear(sf::Color::Black);
 
         // 6. Render background
         for (size_t i = 0; i < mGameObjects.size(); i++){
