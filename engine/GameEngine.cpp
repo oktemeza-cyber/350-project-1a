@@ -141,8 +141,8 @@ bool GameEngine::ProcessEvents(GameContext *context)
             }
             return true;
         }
-        return false;
     }
+    return false;
 }
 
 
