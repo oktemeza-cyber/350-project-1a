@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include <memory>
 #include "CollisionObject.h"
-#include "GraphicObject.h"
+#include "GraphicsObject.h"
 
 /// @brief
 namespace CMPUT350 {
