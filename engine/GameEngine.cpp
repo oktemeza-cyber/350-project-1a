@@ -80,11 +80,17 @@ void GameEngine::Run() {
         for (size_t i = 0; i < mGameObjects.size(); i++){ //Straight from description
             std::shared_ptr<CollisionObject> objA = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[i]);
             if (objA == nullptr) continue; // Not a collision object, skip
-            for (size_t j = 0; j < mGameObjects.size(); j++){
+            for (size_t j = i+1; j < mGameObjects.size(); j++){
                 std::shared_ptr<CollisionObject> objB = std::dynamic_pointer_cast<CollisionObject>(mGameObjects[j]);
                 if (objB == nullptr) continue;
-                if (i == j) continue;
-                objA->CollisionEnter(objB);
+                
+                const Rect &aBounds = objA->GetBounds();
+                const Rect &bBounds = objB->GetBounds();
+
+                if (aBounds.Intersects(bBounds)){
+                    objA->CollisionEnter(objB);
+                    objB->CollisionEnter(objA);
+                }
             }
         }
 
