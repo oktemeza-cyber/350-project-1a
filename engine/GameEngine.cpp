@@ -87,7 +87,7 @@ void GameEngine::Run() {
                 const Rect &aBounds = objA->GetBounds();
                 const Rect &bBounds = objB->GetBounds();
 
-                if (aBounds.Intersects(bBounds)){
+                if (RectIntersects(aBounds, bBounds)){
                     objA->CollisionEnter(objB);
                     objB->CollisionEnter(objA);
                 }

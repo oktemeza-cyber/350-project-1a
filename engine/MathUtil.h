@@ -272,11 +272,12 @@ struct Rect {
         // Checks if a point is inside a rect (including edges)
         return (topLeft.x <= p.x && topLeft.y <= p.y && topLeft.x + width >= p.x && topLeft.y + height >= p.y);
     }
-    bool Intersects(Rect a, const Rect &b) {
-        a &= b;
-        return a.width >= 0 && a.height >= 0;
-    }
 };
+
+static bool RectIntersects(Rect a, const Rect &b) {
+    a &= b;
+    return a.width >= 0 && a.height >= 0;
+}
 
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
     // Converts point into printable text (I chose (a,b)-(width x height) formatting)
