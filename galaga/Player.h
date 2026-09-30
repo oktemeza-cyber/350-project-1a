@@ -31,8 +31,6 @@ private:
     bool isAlive;
     CMPUT350::Point2D playerLocation;
     CMPUT350::Rect playerBounds;
-    bool movingLeft;
-    bool movingRight;
     Bullet* activeBullets[2];
 
 };

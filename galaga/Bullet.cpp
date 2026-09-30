@@ -17,8 +17,14 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
 
 void Bullet::Update(CMPUT350::GameContext* context)
 {
-        start.y += 10 * 1;
-        bounds = CMPUT350::Rect(start, 2);
+        start.x += final.x * 10.0f;
+        start.y += final.y * 10.0f;
+        bounds = CMPUT350::Rect(start, 2.0f);
+
+
+    if(start.y < 0){
+        Kill();
+    }
     
 }
 
