@@ -190,8 +190,6 @@ struct Rect {
 
     Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
 
-    Rect(Point2D tl = {0, 0}, float w = 0, float h = 0) : topLeft(tl), width(w), height(h) {}
-
     // Creates bounding box around p1 and p2 with positive width/height
     Rect(Point2D p1, Point2D p2)
         : topLeft(std::min(p1.x, p2.x), std::min(p1.y, p2.y)),
