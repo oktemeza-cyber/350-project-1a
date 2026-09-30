@@ -27,7 +27,6 @@ public:
 
 private:
     bool isAlive;
-    CMPUT350::Point2D enemyLoc;
     CMPUT350::Rect sBounds;
          
 
