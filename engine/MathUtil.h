@@ -188,6 +188,8 @@ struct Rect {
     Rect(float left, float top, float width, float height)
         : topLeft(Point2D(left, top)), width(width), height(height) {} 
 
+    Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
+
     Rect(Point2D tl = {0, 0}, float w = 0, float h = 0) : topLeft(tl), width(w), height(h) {}
 
     // Creates bounding box around p1 and p2 with positive width/height
