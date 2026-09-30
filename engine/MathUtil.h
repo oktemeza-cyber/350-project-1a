@@ -95,6 +95,10 @@ struct Point2D {
             y = y / temp;
         }
     }
+    Point2D Perpendicular() {
+        // Returns the perpendicular version (counterclockwise)
+        return Point2D(-y,x);
+    }
 };
 
 static std::ostream &operator<<(std::ostream &os, const Point2D &p) {
