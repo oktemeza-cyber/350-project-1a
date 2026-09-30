@@ -5,16 +5,29 @@ namespace CMPUT350 {
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
     : mWindow(window), mFont(font) {}
 
-void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {}
+void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
+    sf::Text sfText(*mFont, text, pixelSize);
+    sfText.setFillColor(sf::Color(c.r, c.g, c.b));
 
-void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {}
+    sf::FloatRect bounds = sfText.getLocalBounds();
+    sfText.setOrigin(sf::Vector2f(bounds.position.x + bounds.size.x / 2.0f, bounds.position.y + bounds.size.y / 2.0f));
+
+    sfText.setPosition(sf::Vector2f(p.x, p.y));
+    mWindow->draw(sfText);
+}
+
+void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
+    sf::Text sfText(*mFont, text, pixelSize);
+    sfText.setFillColor(sf::Color(c.r, c.g, c.b));
+    sfText.setPosition(sf::Vector2f(p.x, p.y));
+    mWindow->draw(sfText);
+}
 
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     sf::CircleShape shape(radius);
     shape.setPosition(sf::Vector2f(p.x - radius, p.y - radius));
     shape.setFillColor(sf::Color(c.r, c.g, c.b));
     mWindow->draw(shape);
-
 }
 
 void DrawContext::DrawRect(Rect r, RGBColor c) {
