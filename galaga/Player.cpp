@@ -9,6 +9,7 @@ Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playe
 }
 
 void Player::Initialize(CMPUT350::GameContext* context){}
+//no assets need initializing
 
 void Player::Update(CMPUT350::GameContext* context)
 {
@@ -19,6 +20,9 @@ void Player::Update(CMPUT350::GameContext* context)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
         playerLocation.x += 5.0f;
     }
+    //ended up putting the movement input here since update can actively check each frame if a or b is being pressed.
+    //Handle input made it so that you can't stay still unless you press another button, continously moving left or right,
+    //but also did not make it possible to shoot bullets while moving :(
 
     if(playerLocation.x < 0){
         playerLocation.x = 0;
@@ -29,7 +33,7 @@ void Player::Update(CMPUT350::GameContext* context)
     }
 
     playerBounds = CMPUT350::Rect(playerLocation, 20.0f);
-
+    //update playerBounds and keep player within the window
 
 }
 
@@ -42,16 +46,14 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
         }
     }
 
-}
+}//Handler for emptying the activeBullet array so that another bullet can be shot if a free space out of the 2 opens up
 
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
-
-    
     if(key == ' '){
         for(int i = 0; i < 2; i++){
             if(activeBullets[i] == nullptr){
-                Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, -1), true);
+                Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, 0), true);
                 activeBullets[i] = createdBullet;
 
                 std::shared_ptr<CMPUT350::GameObject> newBullet(createdBullet);
@@ -63,11 +65,11 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     }
     
     return false;
-}
+} 
+//on space press, create a new bullet using AddGameObject if any space in the array is a nullptr, then immediately break loop to not add more if two free spots are available.
+//otherwise, don't add any more bullets than the lngth of the activeBullets (which is 2 in this case)
 
-void Player::RenderBackground(CMPUT350::GameContext* context)
-{
-}
+void Player::RenderBackground(CMPUT350::GameContext* context){}
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
@@ -82,6 +84,7 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     context->ScreenContext->DrawRect(shipBody, CMPUT350::Colors::white);
     context->ScreenContext->DrawRect(cockpit, CMPUT350::Colors::yellow);
 }
+//simply draws the ship as a collection of rects
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
@@ -90,7 +93,9 @@ void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
             Kill();  
             bullet->Kill();
         }  
-} //idk if enemies shoot bullets in part a but here's the set-up anyways
+}
+//checks to see if the bullet exists and IsPlayerBullet is false, but playerBullet is automatically true in player.cpp on creation, so the bullet SHOULD never delete
+//when its first created
 
 void Player::Kill()
 {

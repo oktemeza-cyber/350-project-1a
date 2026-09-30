@@ -4,9 +4,8 @@
 
 Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), enemyLoc(loc), sBounds(enemyLoc, 15.0f){}
 
-void Enemy::Initialize(CMPUT350::GameContext* context)
-{
-}
+void Enemy::Initialize(CMPUT350::GameContext* context){}
+//no assets need initializing
 
 void Enemy::Update(CMPUT350::GameContext* context)
 {
@@ -57,6 +56,5 @@ bool Enemy::IsAlive() const
 
 const CMPUT350::Rect& Enemy::GetBounds()
 {
-    // TODO: Update code
     return sBounds;
 }

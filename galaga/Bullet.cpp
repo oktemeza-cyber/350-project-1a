@@ -1,19 +1,15 @@
 #include "Bullet.h"
 #include "Player.h"
 
-Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2)
-{
-}
+Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2){}
 
 bool Bullet::IsPlayerBullet()
 {
-    // TODO: Update
     return playerBullet;
 }
 
-void Bullet::Initialize(CMPUT350::GameContext* context)
-{
-}
+void Bullet::Initialize(CMPUT350::GameContext* context){}
+//no assets need initializing
 
 void Bullet::Update(CMPUT350::GameContext* context)
 {
@@ -56,8 +52,7 @@ void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& ob
             Kill();  
         }  
 }
-//checks to see if the player exists and playerBullet is false, but playerBullet is automatically true on creation, so the bullet SHOULD never delete
-//when its first created
+//idk if enemies shoot bullets in part a but here's partial implementation anyways
 
 void Bullet::Kill()
 {
@@ -71,7 +66,6 @@ bool Bullet::IsAlive() const
 
 const CMPUT350::Rect& Bullet::GetBounds()
 {
-    // TODO: Update code (hopefully done)
     return bounds;
 }
     

@@ -136,6 +136,7 @@ int main()
                 engine.AddGameObject(enemy);
             }
         }
+        //for loop just for the rows of enemies in even space
         engine.Run();
     }
         return 0;
