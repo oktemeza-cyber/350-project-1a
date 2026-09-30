@@ -55,13 +55,13 @@ struct Point2D {
         // Check if two points are equal
         return (x == other.x && y == other.y); //Might fail because float though, maybe come back
     }
-    Point2D &operator*=(const int &scalar) {
+    Point2D &operator*=(const float &scalar) {
         // Multiply this point by a scalar
         x *= scalar;
         y *= scalar;
         return *this;
     }
-    Point2D &operator/=(const int &scalar) {
+    Point2D &operator/=(const float &scalar) {
         // Divide this point by a scalar
         x /= scalar;
         y /= scalar;
@@ -188,7 +188,7 @@ struct Rect {
     Rect(float left, float top, float width, float height)
         : topLeft(Point2D(left, top)), width(width), height(height) {} 
 
-    Rect(Point2D tl = {0, 0}, int w = 0, int h = 0) : topLeft(tl), width(w), height(h) {}
+    Rect(Point2D tl = {0, 0}, float w = 0, float h = 0) : topLeft(tl), width(w), height(h) {}
 
     // Creates bounding box around p1 and p2 with positive width/height
     Rect(Point2D p1, Point2D p2)

@@ -20,4 +20,4 @@ add_library(Engine STATIC ${ENGINE})
 
 target_include_directories(Engine INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(Engine PRIVATE cxx_std_20)
-target_link_libraries(Engine PUBLIC SFML::Graphics)
+target_link_libraries(Engine PUBLIC SFML::Graphics harfbuzz)

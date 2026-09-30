@@ -23,11 +23,11 @@ void GameEngine::RemoveDead() {
 
 GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
     // Sample font loading code
-    // mFont = std::make_shared<sf::Font>();
-    // if (!mFont->openFromMemory(&_font, _font_len))
-    // {
-    //     fprintf(stderr, "WARNING: Font did not load.\n");
-    // }
+    mFont = std::make_shared<sf::Font>();
+    if (!mFont->openFromMemory(&_font, _font_len))
+    {
+        fprintf(stderr, "WARNING: Font did not load.\n");
+    }
 
     mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(sf::Vector2u(width, height)), name); //I think this is how a window is setup
     mWindow->setFramerateLimit(30);
