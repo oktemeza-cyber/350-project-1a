@@ -53,7 +53,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     if(key == ' '){
         for(int i = 0; i < 2; i++){
             if(activeBullets[i] == nullptr){
-                Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, 0), true);
+                Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, -1), true);
                 activeBullets[i] = createdBullet;
 
                 std::shared_ptr<CMPUT350::GameObject> newBullet(createdBullet);
