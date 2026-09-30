@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "Player.h"
 
-Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2)
+Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2.0f)
 {
 }
 
@@ -18,7 +18,7 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
 void Bullet::Update(CMPUT350::GameContext* context)
 {
         start.y += 10 * 1;
-        bounds = CMPUT350::Rect(start, 2);
+        bounds = CMPUT350::Rect(start, 2.0f);
     
 }
 
