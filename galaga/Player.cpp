@@ -111,3 +111,15 @@ const CMPUT350::Rect& Player::GetBounds()
 {
     return playerBounds;
 }
+
+CMPUT350::Point2D Player::GetLocation() const {
+    return playerLocation; // todo
+}
+
+float Player::GetRotation() const {
+    return 0; // todo
+}
+
+const std::vector<CMPUT350::Shape>& Player::GetShapes() {
+    return std::vector<CMPUT350::Shape>{CMPUT350::Shape(playerBounds)}; // todo
+}

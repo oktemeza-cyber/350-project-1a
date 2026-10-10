@@ -21,11 +21,13 @@ public:
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;
     void RenderForeground(CMPUT350::GameContext* context) override;
-
+    CMPUT350::Point2D GetLocation() const override;
+    float GetRotation() const override;
 
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
 private:
     bool isAlive;

@@ -58,3 +58,15 @@ const CMPUT350::Rect& Enemy::GetBounds()
 {
     return sBounds;
 }
+
+CMPUT350::Point2D Enemy::GetLocation() const {
+    return CMPUT350::Point2D(0,0); // todo
+}
+
+float Enemy::GetRotation() const {
+    return 0; // todo
+}
+
+const std::vector<CMPUT350::Shape>& Enemy::GetShapes() {
+    return std::vector<CMPUT350::Shape>{CMPUT350::Shape(sBounds)}; // todo
+}
