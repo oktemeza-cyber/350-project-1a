@@ -1,0 +1,16 @@
+#ifndef NOTIFICATION_MANAGER_H
+#define NOTIFICATION_MANAGER_H
+
+#include "GameObject.h"
+#include <unordered_map>
+
+class NotificationManager {
+public:
+    void Register(std::weak_ptr<GameObject> object, const std::string& key);
+    void Unregister(std::weak_ptr<GameObject> object, const std::string& key);
+    void Notify(const std::string& message);
+private:
+    std::unordered_map<std::string, std::vector<std::weak_ptr<GameObject>>> mListeners;
+};
+
+#endif // NOTIFICATION_MANAGER_H

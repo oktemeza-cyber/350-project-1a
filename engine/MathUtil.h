@@ -171,7 +171,7 @@ struct Line {
 };
 
 static std::ostream &operator<<(std::ostream &os, const Line &l) {
-    // Converts point into printable text (I chose (a,b)-(c,d) formatting)
+    // Converts line into printable text (I chose (a,b)-(c,d) formatting)
     os << "(" << l.p1.x << "," << l.p1.y << ")-(" << l.p2.x << "," << l.p2.y << ")";
     return os;
 }
@@ -184,6 +184,12 @@ struct Circle {
 
     Circle(float x, float y, float r) : center(x, y), radius(r) {}
 };
+
+static std::ostream &operator<<(std::ostream &os, const Circle &c) {
+    // Converts circle into printable text (I chose (center.x, center.y) x radius formatting)
+    os << "(" << c.center.x << "," << c.center.y << ") x " << c.radius << "";
+    return os;
+}
 
 struct Rect {
     Point2D topLeft;
@@ -280,7 +286,7 @@ static bool RectIntersects(Rect a, const Rect &b) {
 }
 
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
-    // Converts point into printable text (I chose (a,b)-(width x height) formatting)
+    // Converts rect into printable text (I chose (a,b)-(width x height) formatting)
     os << "(" << l.topLeft.x << "," << l.topLeft.y << ")-(" << l.width << " x " << l.height << ")";
     return os;
 }
