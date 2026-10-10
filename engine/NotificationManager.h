@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include <unordered_map>
 
+namespace CMPUT350 {
+
 class NotificationManager {
 public:
     void Register(std::weak_ptr<GameObject> object, const std::string& key);
@@ -12,5 +14,7 @@ public:
 private:
     std::unordered_map<std::string, std::vector<std::weak_ptr<GameObject>>> mListeners;
 };
+
+} // namespace CMPUT350
 
 #endif // NOTIFICATION_MANAGER_H

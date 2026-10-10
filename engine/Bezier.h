@@ -4,6 +4,8 @@
 #include <vector>
 #include "MathUtil.h"
 
+namespace CMPUT350 {
+
 class Bezier {
 public:
 	Bezier(const std::vector<Point2D> &pts);
@@ -14,5 +16,7 @@ public:
 	static Point2D GetPoint(const std::vector<Point2D> &pts, float t);
 	static Point2D GetSlope(const std::vector<Point2D> &pts, float t);	
 };
+
+} // namespace CMPUT350
 
 #endif // BEZIER_H
