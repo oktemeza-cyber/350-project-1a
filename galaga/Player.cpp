@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Bullet.h"
 
-Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playerBounds(playerLocation, 20.0f)
+Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playerBounds(playerLocation, 20.0f), shapes{}
 {
     activeBullets[0] = nullptr;
     activeBullets[1] = nullptr;
@@ -114,7 +114,7 @@ const CMPUT350::Rect& Player::GetBounds()
 }
 
 CMPUT350::Point2D Player::GetLocation() const {
-    return playerLocation; // todo
+    return CMPUT350::Point2D(0,0); // todo
 }
 
 float Player::GetRotation() const {
@@ -122,5 +122,5 @@ float Player::GetRotation() const {
 }
 
 const std::vector<CMPUT350::Shape>& Player::GetShapes() {
-    return std::vector<CMPUT350::Shape>{CMPUT350::Shape(playerBounds)}; // todo
+    return shapes; // todo
 }

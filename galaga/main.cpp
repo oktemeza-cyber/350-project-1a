@@ -97,6 +97,24 @@ public:
         context->ScreenContext->DrawLine(mLoc, mLoc + mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
     }
 
+    // stupid ball is a gameobject so also got the new changes.
+    CMPUT350::Point2D GetLocation() const override
+    {
+        return mLoc;
+    }
+
+    float GetRotation() const override
+    {
+        return 0.0f;
+    }
+
+    const std::vector<CMPUT350::Shape>& GetShapes() override
+    {
+        static std::vector<CMPUT350::Shape> shapes; // maybe idk
+        shapes = {CMPUT350::Shape(GetBounds())};
+        return shapes;
+    }
+
 private:
     static std::random_device rd;
     static std::mt19937 gen;

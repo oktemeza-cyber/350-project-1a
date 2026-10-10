@@ -35,6 +35,7 @@ private:
     CMPUT350::Rect playerBounds;
     Bullet* activeBullets[2];
 
+    std::vector<CMPUT350::Shape> shapes;
 };
 
 #endif

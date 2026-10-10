@@ -35,5 +35,7 @@ private:
     CMPUT350::Point2D start;
     CMPUT350::Point2D final;
     CMPUT350::Rect bounds;
+
+    std::vector<CMPUT350::Shape> shapes; //maybe temp fix? idk
 };
 #endif // BULLET_H

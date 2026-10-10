@@ -2,7 +2,7 @@
 #include "Bullet.h"
 #include "Player.h"
 
-Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2){}
+Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player): isAlive(true), playerBullet(player), start(location), final(heading), bounds(location, 2), shapes{} {}
 
 bool Bullet::IsPlayerBullet()
 {
@@ -79,7 +79,7 @@ float Bullet::GetRotation() const {
 }
 
 const std::vector<CMPUT350::Shape>& Bullet::GetShapes() {
-    return std::vector<CMPUT350::Shape>{CMPUT350::Shape(bounds)}; // todo
+    return shapes; // todo
 }
 
     

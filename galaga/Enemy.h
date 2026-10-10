@@ -31,7 +31,7 @@ private:
     bool isAlive;
     CMPUT350::Rect sBounds;
          
-
+    std::vector<CMPUT350::Shape> shapes;
 };
 
 

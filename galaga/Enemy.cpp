@@ -3,7 +3,7 @@
 #include "Bullet.h"
 
 
-Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), sBounds(loc, 15.0f){}
+Enemy::Enemy(CMPUT350::Point2D loc) : isAlive(true), sBounds(loc, 15.0f), shapes{} {}
 
 void Enemy::Initialize(CMPUT350::GameContext* context){}
 //no assets need initializing
@@ -69,5 +69,5 @@ float Enemy::GetRotation() const {
 }
 
 const std::vector<CMPUT350::Shape>& Enemy::GetShapes() {
-    return std::vector<CMPUT350::Shape>{CMPUT350::Shape(sBounds)}; // todo
+    return shapes; // todo
 }
