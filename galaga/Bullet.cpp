@@ -1,3 +1,4 @@
+#include <vector> 
 #include "Bullet.h"
 #include "Player.h"
 
@@ -43,6 +44,7 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
+    context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::Colors::red);
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
