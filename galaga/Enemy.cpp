@@ -5,7 +5,7 @@
 #include "Player.h"
 
 
-Enemy::Enemy(CMPUT350::Point2D loc, std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(path.front(), 15.0f), shapes{}, health(1), attacking(false),
+Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(path.front(), 15.0f), shapes{}, health(1), attacking(false),
 inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path){}
 
 
@@ -32,6 +32,13 @@ void Enemy::Update(CMPUT350::GameContext* context)
         enemyLoc = formationLoc;
     }
     sBounds = CMPUT350::Rect(enemyLoc, 15.0f);
+}
+
+void Enemy::startPath(const std::vector<CMPUT350::Point2D> &controlPoints){
+    bezier = CMPUT350::Bezier(controlPoints);
+    progress = 0.0f;
+    progressMax = static_cast<float>((controlPoints.size() - 1) / 3);
+    inFormation = false;
 }
 
 void Enemy::LateUpdate(CMPUT350::GameContext* context)

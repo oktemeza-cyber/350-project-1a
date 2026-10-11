@@ -11,18 +11,16 @@
 class Enemy : public CMPUT350::CollisionObject
 {
 public:
-    Enemy(CMPUT350::Point2D loc, std::vector<CMPUT350::Point2D> &path);
+    Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path);
     virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
 
     // GameObject Functions
-    void Initialize(CMPUT350::GameContext* context) override;
     void Update(CMPUT350::GameContext* context) override;
     void LateUpdate(CMPUT350::GameContext* context) override;
     bool IsAlive() const override;
     void Kill() override;
 
     // Graphics Object Functions
-    void RenderBackground(CMPUT350::GameContext* context) override;
     void RenderForeground(CMPUT350::GameContext* context) override;
     CMPUT350::Point2D GetLocation() const override;
     float GetRotation() const override;

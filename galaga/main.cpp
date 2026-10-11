@@ -2,6 +2,7 @@
 #include "GameEngine.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Enemy1.h"
 #include "Stars.h"
 
 class Ball : public CMPUT350::CollisionObject
@@ -148,13 +149,20 @@ int main()
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
 
-        for(int y = 0; y < 5; y++){
             for (int x = 0; x < 8; x++)
             {
-                auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(30 + x * 100, 30 + y*100));
+                CMPUT350::Point2D slot(100 + x *200, 100);
+
+                std::vector<CMPUT350::Point2D> path;
+                path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
+                path.push_back(CMPUT350::Point2D(slot.x + 300.0f, 250.0f));
+                path.push_back(CMPUT350::Point2D(slot.x - 300.0f, 450.0f));
+                path.push_back(slot);
+
+                auto enemy = std::make_shared<Enemy1>(slot, path);
                 engine.AddGameObject(enemy);
             }
-        }
+        
         //for loop just for the rows of enemies in even space
         engine.Run();
     }
