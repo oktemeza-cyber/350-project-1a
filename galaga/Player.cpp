@@ -7,6 +7,11 @@
 Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playerBounds(playerLocation, 20.0f), shapes{}
 {}
 
+void Player::setSelf(std::weak_ptr<CMPUT350::GameObject> selfPtr){
+    self = selfPtr;
+}
+//helper to set parent
+
 void Player::Initialize(CMPUT350::GameContext* context){}
 //no assets need initializing
 
@@ -46,7 +51,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     if(key == ' '){
         for(int i = 0; i < 2; i++){
             if(activeBullets[i].expired()){
-                auto createdBullet = std::make_shared<Bullet>(playerLocation, CMPUT350::Point2D(0, -1), true);
+                auto createdBullet = std::make_shared<Bullet>(playerLocation, CMPUT350::Point2D(0, -1), true, self);
                 activeBullets[i] = createdBullet;
                 context->mEngineView->AddGameObject(createdBullet);
                 break;

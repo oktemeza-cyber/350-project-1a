@@ -44,17 +44,39 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::Colors::red);
+    if(isAlive){
+
+        if(playerBullet){
+            context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 20, 20));
+        } else {
+            context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 60, 60));
+            //This is for the enemy but idk how different the colour will be--make sure to test later
+        }
+    }
+    else if (hasHit){
+        context->ScreenContext->DrawCircle(hitPoint, 5.0f, CMPUT350::Colors::green);
+    }
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
-    Player* player = dynamic_cast<Player*>(obj.get());
-        if(!playerBullet && player != nullptr){
-            Kill();  
-        }  
+    CollisionEnter(obj, start);
 }
-//idk if enemies shoot bullets in part a but here's partial implementation anyways
+
+void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D& collisionPoint){
+    if(obj.get() == parent.lock().get()){
+        return;
+    }
+    //ignores the ship for collision 
+
+    if(!hasHit || collisionPoint.y > hitPoint.y){
+        hitPoint = collisionPoint;
+        hasHit = true;
+    } //if hasHit is false or the collisionPoint (y) is higher than hitPoint (y), make the hitpoint equal to the collisionPoint which marks the hit
+    Kill();
+    //kill no matter what after collision
+}
+
 
 void Bullet::Kill()
 {
@@ -76,7 +98,7 @@ CMPUT350::Point2D Bullet::GetLocation() const {
 }
 
 float Bullet::GetRotation() const {
-    return 0; // todo
+    return 0.0f; // todo
 }
 
 const std::vector<CMPUT350::Shape>& Bullet::GetShapes() {

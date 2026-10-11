@@ -9,6 +9,7 @@ class Player : public CMPUT350::CollisionObject
 {
 public:
     Player(CMPUT350::Point2D loc);
+    void setSelf(std::weak_ptr<CMPUT350::GameObject> selfPtr); // this is for the parent variable in relation to bullet
 
     // GameObject Functions
     void Initialize(CMPUT350::GameContext* context) override;
@@ -34,8 +35,8 @@ private:
     CMPUT350::Point2D playerLocation;
     CMPUT350::Rect playerBounds;
     std::weak_ptr<Bullet> activeBullets[2];
-
     std::vector<CMPUT350::Shape> shapes;
+    std::weak_ptr<CMPUT350::GameObject> self; //parent continued 
 };
 
 #endif
