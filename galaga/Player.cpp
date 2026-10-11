@@ -1,13 +1,11 @@
 #include <cassert>
 #include <vector>
+#include <memory>
 #include "Player.h"
 #include "Bullet.h"
 
 Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playerBounds(playerLocation, 20.0f), shapes{}
-{
-    activeBullets[0] = nullptr;
-    activeBullets[1] = nullptr;
-}
+{}
 
 void Player::Initialize(CMPUT350::GameContext* context){}
 //no assets need initializing
@@ -40,12 +38,6 @@ void Player::Update(CMPUT350::GameContext* context)
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
-    
-    for(int i = 0; i < 2; i++){
-        if(activeBullets[i] != nullptr && !activeBullets[i]->IsAlive()){
-            activeBullets[i] = nullptr;
-        }
-    }
 
 }//Handler for emptying the activeBullet array so that another bullet can be shot if a free space out of the 2 opens up
 
@@ -53,12 +45,10 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     if(key == ' '){
         for(int i = 0; i < 2; i++){
-            if(activeBullets[i] == nullptr){
-                Bullet* createdBullet = new Bullet(playerLocation, CMPUT350::Point2D(0, -1), true);
+            if(activeBullets[i].expired()){
+                auto createdBullet = std::make_shared<Bullet>(playerLocation, CMPUT350::Point2D(0, -1), true);
                 activeBullets[i] = createdBullet;
-
-                std::shared_ptr<CMPUT350::GameObject> newBullet(createdBullet);
-                context->mEngineView->AddGameObject(newBullet);
+                context->mEngineView->AddGameObject(createdBullet);
                 break;
             }
         }
