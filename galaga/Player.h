@@ -33,7 +33,7 @@ private:
     bool isAlive;
     CMPUT350::Point2D playerLocation;
     CMPUT350::Rect playerBounds;
-    Bullet* activeBullets[2];
+    std::weak_ptr<Bullet> activeBullets[2];
 
     std::vector<CMPUT350::Shape> shapes;
 };
