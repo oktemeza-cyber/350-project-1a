@@ -30,6 +30,9 @@ public:
 
     void Run();
 
+    void InstallKeyDownNotification(int key, const std::string &notification) override;
+    void InstallKeyUpNotification(int key, const std::string &notification) override;
+
     EngineView::const_iterator cbegin() const override;
     EngineView::const_iterator cend() const override;
     EngineView::const_iterator begin() const override;
@@ -44,6 +47,9 @@ private:
 
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPending;
+
+    std::unordered_map<int, std::string> mKeyNotifsUp;
+    std::unordered_map<int, std::string> mKeyNotifsDown;
 };  
 
 }  // namespace CMPUT350

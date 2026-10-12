@@ -4,6 +4,7 @@
 #include "GraphicsObject.h"
 #include "DrawContext.h"
 #include "GameContext.h"
+#include "Keyboard.h"
 
 /// @brief
 namespace CMPUT350 {
@@ -51,10 +52,20 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
  */
 void GameEngine::Run() {
     DrawContext mDContext(mWindow, mFont);
+    NotificationManager mNotif;
 
     GameContext mGContext;
     mGContext.mEngineView = this;
     mGContext.ScreenContext = &mDContext;
+    mGContext.mNotificationManager = &mNotif;
+
+    // Default controls
+    InstallKeyDownNotification(Key::A, "MoveLeft"); // Add more if needed
+    InstallKeyUpNotification(Key::A, "StopLeft");
+    InstallKeyDownNotification(Key::D, "MoveRight");
+    InstallKeyUpNotification(Key::D, "StopRight");
+    InstallKeyDownNotification(Key::Space, "Shoot");
+    
 
     while (mWindow->isOpen())  // window is open
     {
@@ -139,16 +150,34 @@ bool GameEngine::ProcessEvents(GameContext *context)
             // I dunno i'll fix this later, I need research here
             return true;
         }
-        else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
+        else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
-            // use keyPressed->unicode to get character
-            for (auto& obj : mGameObjects) {
-                obj->HandleKeyEvent(context, keyPressed->unicode);
+            int key = static_cast<int>(keyPressed->scancode);
+            auto it = mKeyNotifsDown.find(key);
+            if (it != mKeyNotifsDown.end()) {
+                context->mNotificationManager->Notify(it->second);
+            }
+            return true;
+        }
+        else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+        {
+            int key = static_cast<int>(keyReleased->scancode);
+            auto it = mKeyNotifsUp.find(key);
+            if (it != mKeyNotifsUp.end()) {
+                context->mNotificationManager->Notify(it->second);
             }
             return true;
         }
     }
     return false;
+}
+
+void GameEngine::InstallKeyDownNotification(int key, const std::string &notification) {
+    mKeyNotifsDown[key] = notification;
+}
+
+void GameEngine::InstallKeyUpNotification(int key, const std::string &notification) {
+    mKeyNotifsUp[key] = notification;
 }
 
 EngineView::const_iterator GameEngine::cbegin() const {

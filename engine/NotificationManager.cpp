@@ -2,8 +2,6 @@
 
 namespace CMPUT350 {
 
-NotificationManager::NotificationManager() {}
-
 void NotificationManager::Register(std::weak_ptr<GameObject> object, const std::string& key) {
     mListeners[key].push_back(object);
 }
@@ -29,7 +27,7 @@ void NotificationManager::Notify(const std::string& message) {
     auto it = mListeners.find(message); // Search for key
 
     if (it == mListeners.end()) {
-        return; // Not listening for this key
+        return; // Not listening for this key (later message)
     }
 
     auto &vec = it->second; // Get reference to objects vector

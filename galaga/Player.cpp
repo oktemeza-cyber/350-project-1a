@@ -12,17 +12,35 @@ void Player::setSelf(std::weak_ptr<CMPUT350::GameObject> selfPtr){
 }
 //helper to set parent
 
-void Player::Initialize(CMPUT350::GameContext* context){}
+void Player::Initialize(CMPUT350::GameContext* context){
+    context->mNotificationManager->Register(self, "MoveLeft");
+    context->mNotificationManager->Register(self, "MoveRight");
+    context->mNotificationManager->Register(self, "StopLeft");
+    context->mNotificationManager->Register(self, "StopRight");
+    context->mNotificationManager->Register(self, "Shoot");
+}
 //no assets need initializing
 
 void Player::Update(CMPUT350::GameContext* context)
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
+    if(movingLeft){
         playerLocation.x -= 5.0f;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
+    if(movingRight){
         playerLocation.x += 5.0f;
+    }
+
+    if(shooting){
+        for(int i = 0; i < 2; i++){
+            if(activeBullets[i].expired()){
+                auto createdBullet = std::make_shared<Bullet>(playerLocation, CMPUT350::Point2D(0, -1), true, self);
+                activeBullets[i] = createdBullet;
+                context->mEngineView->AddGameObject(createdBullet);
+                break;
+            }
+        }        
+        shooting = false; // Reset shooting after shot (so doesn't double fire)
     }
     //ended up putting the movement input here since update can actively check each frame if a or b is being pressed.
     //Handle input made it so that you can't stay still unless you press another button, continously moving left or right,
@@ -46,22 +64,27 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 
 }//Handler for emptying the activeBullet array so that another bullet can be shot if a free space out of the 2 opens up
 
-bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
+void Player::ReceiveNotification(const std::string &key)
 {
-    if(key == ' '){
-        for(int i = 0; i < 2; i++){
-            if(activeBullets[i].expired()){
-                auto createdBullet = std::make_shared<Bullet>(playerLocation, CMPUT350::Point2D(0, -1), true, self);
-                activeBullets[i] = createdBullet;
-                context->mEngineView->AddGameObject(createdBullet);
-                break;
-            }
-        }
-        return true;
+    if(key == "MoveLeft"){
+        movingLeft = true;
+        movingRight = false;
     }
-    
-    return false;
-} 
+    else if(key == "MoveRight"){
+        movingRight = true;
+        movingLeft = false;
+    }
+    else if(key == "Shoot"){
+        shooting = true;
+    }
+    else if(key == "StopLeft"){
+        movingLeft = false;
+    }
+    else if(key == "StopRight"){
+        movingRight = false;
+    }
+}
+
 //on space press, create a new bullet using AddGameObject if any space in the array is a nullptr, then immediately break loop to not add more if two free spots are available.
 //otherwise, don't add any more bullets than the lngth of the activeBullets (which is 2 in this case)
 
