@@ -3,7 +3,7 @@
 namespace CMPUT350 {
 
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
-    : mWindow(window), mFont(font) {}
+    : mWindow(window), mFont(font), mContextOffset(0, 0), mContextRotation(0) {}
 
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
     sf::Text sfText(*mFont, text, pixelSize);
@@ -85,5 +85,64 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
 int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
+
+void DrawContext::SetContextOffset(Point2D p) {
+    mContextOffset = p;
+}
+
+void DrawContext::SetContextRotation(float rotation) {
+    mContextRotation = rotation;
+}
+
+Point2D DrawContext::Transform(Point2D p) {
+    // Apply rotation and translation to the point
+    float rad = mContextRotation * (3.1415926535f / 180.0f); // Convert degrees to radians, assuming we use degrees for rotation
+    float cosTheta = std::cos(rad);
+    float sinTheta = std::sin(rad);
+
+    Point2D rotated(p.x * cosTheta - p.y * sinTheta, p.x * sinTheta + p.y * cosTheta);
+
+    return rotated + mContextOffset;
+}
+
+Point2D DrawContext::ReverseTransform(Point2D p) {
+    // Reverse translation and rotation
+    Point2D translated = p - mContextOffset;
+
+    float rad = -mContextRotation * (3.1415926535f / 180.0f); // Conversion
+    float cosTheta = std::cos(rad);
+    float sinTheta = std::sin(rad);
+
+    return Point2D(translated.x * cosTheta - translated.y * sinTheta, translated.x * sinTheta + translated.y * cosTheta);
+}
+
+Rect DrawContext::Transform(Rect r) {
+    // Rotate rectangle and compute new bounding box after rotation
+    Point2D corners[4] = {
+        r.topLeft,
+        r.topLeft + Point2D(r.width, 0),
+        r.topLeft + Point2D(0, r.height),
+        r.topLeft + Point2D(r.width, r.height)
+    };
+
+    Point2D transformedCorners[4];
+    for (int i = 0; i < 4; ++i) {
+        transformedCorners[i] = Transform(corners[i]);
+    }
+
+    float minX = transformedCorners[0].x;
+    float maxX = transformedCorners[0].x;
+    float minY = transformedCorners[0].y;
+    float maxY = transformedCorners[0].y;
+
+    for (int i = 1; i < 4; ++i) {
+        if (transformedCorners[i].x < minX) minX = transformedCorners[i].x;
+        if (transformedCorners[i].x > maxX) maxX = transformedCorners[i].x;
+        if (transformedCorners[i].y < minY) minY = transformedCorners[i].y;
+        if (transformedCorners[i].y > maxY) maxY = transformedCorners[i].y;
+    }
+
+    return Rect(Point2D(minX, minY), maxX - minX, maxY - minY);
+}
 
 }  // namespace CMPUT350

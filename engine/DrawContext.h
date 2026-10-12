@@ -48,6 +48,9 @@ private:
 	Point2D ReverseTransform(Point2D p);
 	Rect Transform(Rect r); // Rotates rectangle and computes new bounding box after rotation
 
+    Point2D mContextOffset;
+    float mContextRotation;
+
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
 };

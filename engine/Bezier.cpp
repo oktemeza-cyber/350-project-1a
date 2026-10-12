@@ -18,7 +18,7 @@ Point2D Bezier::GetPoint(const std::vector<Point2D> &pts, float t) {
     const int k = (pts.size() - 1) / 3;
 
     if (t <= 0.0f) return pts.front();
-    if (t >= static_cast<float>(k)) return pts.back();
+    if (t >= static_cast<float>(k)) return pts[k*3 + 3];
 
     const float segmentT = t - std::floor(t);
     const int startIndex = static_cast<int>(t) * 3;
@@ -33,7 +33,7 @@ Point2D Bezier::GetSlope(const std::vector<Point2D> &pts, float t) {
     const int k = (pts.size() - 1) / 3;
 
     if (t <= 0.0f) return 3*(pts[1] - pts[0]);
-    if (t >= static_cast<float>(k)) return 3*(pts.back() - pts[pts.size() - 2]);
+    if (t >= static_cast<float>(k)) return 3*(pts[k*3 + 3] - pts[k*3 + 2]);
 
     const float segmentT = t - std::floor(t);
     const int startIndex = static_cast<int>(t) * 3;

@@ -52,11 +52,14 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
  */
 void GameEngine::Run() {
     DrawContext mDContext(mWindow, mFont);
+    DrawContext guiContext(mWindow, mFont);
     NotificationManager mNotif;
 
     GameContext mGContext;
     mGContext.mEngineView = this;
     mGContext.ScreenContext = &mDContext;
+    mGContext.GUIContext = &guiContext;
+    mGContext.currentFrame = 0;
     mGContext.mNotificationManager = &mNotif;
 
     // Default controls
@@ -65,7 +68,7 @@ void GameEngine::Run() {
     InstallKeyDownNotification(Key::D, "MoveRight");
     InstallKeyUpNotification(Key::D, "StopRight");
     InstallKeyDownNotification(Key::Space, "Shoot");
-    
+
 
     while (mWindow->isOpen())  // window is open
     {
@@ -131,6 +134,8 @@ void GameEngine::Run() {
         mWindow->display();
 
         if (mGameObjects.empty()) break;
+
+        mGContext.currentFrame++;
     }
 }
 
