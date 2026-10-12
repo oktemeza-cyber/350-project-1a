@@ -51,13 +51,13 @@ void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject) {
  * all objects have been destroyed.
  */
 void GameEngine::Run() {
-    DrawContext mDContext(mWindow, mFont);
+    DrawContext screenContext(mWindow, mFont);
     DrawContext guiContext(mWindow, mFont);
     NotificationManager mNotif;
 
     GameContext mGContext;
     mGContext.mEngineView = this;
-    mGContext.ScreenContext = &mDContext;
+    mGContext.ScreenContext = &screenContext;
     mGContext.GUIContext = &guiContext;
     mGContext.currentFrame = 0;
     mGContext.mNotificationManager = &mNotif;
@@ -120,6 +120,8 @@ void GameEngine::Run() {
         for (size_t i = 0; i < mGameObjects.size(); i++){
             std::shared_ptr<GraphicsObject> objA = std::dynamic_pointer_cast<GraphicsObject>(mGameObjects[i]);
             if (objA == nullptr) continue; // Not a graphics object, skip
+            screenContext.SetContextOffset(objA->GetLocation());
+            screenContext.SetContextRotation(objA->GetRotation());
             objA->RenderBackground(&mGContext);
         }
 
@@ -127,6 +129,8 @@ void GameEngine::Run() {
         for (size_t i = 0; i < mGameObjects.size(); i++){
             std::shared_ptr<GraphicsObject> objA = std::dynamic_pointer_cast<GraphicsObject>(mGameObjects[i]);
             if (objA == nullptr) continue; // Not a graphics object, skip
+            screenContext.SetContextOffset(objA->GetLocation());
+            screenContext.SetContextRotation(objA->GetRotation());
             objA->RenderForeground(&mGContext);
         }
 

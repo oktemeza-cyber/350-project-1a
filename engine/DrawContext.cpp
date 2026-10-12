@@ -6,6 +6,8 @@ DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_p
     : mWindow(window), mFont(font), mContextOffset(0, 0), mContextRotation(0) {}
 
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
+    p = Transform(p);
+
     sf::Text sfText(*mFont, text, pixelSize);
     sfText.setFillColor(sf::Color(c.r, c.g, c.b));
 
@@ -17,6 +19,8 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
 }
 
 void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
+    p = Transform(p);
+
     sf::Text sfText(*mFont, text, pixelSize);
     sfText.setFillColor(sf::Color(c.r, c.g, c.b));
     sfText.setPosition(sf::Vector2f(p.x, p.y));
@@ -24,6 +28,8 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
 }
 
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
+    p = Transform(p);
+
     sf::CircleShape shape(radius);
     shape.setPosition(sf::Vector2f(p.x - radius, p.y - radius));
     shape.setFillColor(sf::Color(c.r, c.g, c.b));
@@ -31,6 +37,8 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 }
 
 void DrawContext::DrawRect(Rect r, RGBColor c) {
+    r = Transform(r);
+
     sf::RectangleShape shape(sf::Vector2f(r.width, r.height));
     shape.setPosition(sf::Vector2f(r.topLeft.x, r.topLeft.y));
     shape.setFillColor(sf::Color(c.r, c.g, c.b));
@@ -38,6 +46,8 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
 }
 
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
+    r = Transform(r);
+
     // this system breaks if width is larger than the size of the rectangle, but I thought it'd look nicer
     Point2D topOffset(0,width/2);
     Point2D sideOffset(width/2,0);
@@ -66,6 +76,9 @@ void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
  * relative to the world offset and rendered onto the associated window.
  */
 void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
+    from = Transform(from);
+    to = Transform(to);
+
     Point2D end = (from - to).Perpendicular();
     end.Normalize();
     end *= width / 2;
@@ -118,12 +131,7 @@ Point2D DrawContext::ReverseTransform(Point2D p) {
 
 Rect DrawContext::Transform(Rect r) {
     // Rotate rectangle and compute new bounding box after rotation
-    Point2D corners[4] = {
-        r.topLeft,
-        r.topLeft + Point2D(r.width, 0),
-        r.topLeft + Point2D(0, r.height),
-        r.topLeft + Point2D(r.width, r.height)
-    };
+    Point2D corners[4] = {r.topLeft, r.topLeft + Point2D(r.width, 0), r.topLeft + Point2D(0, r.height), r.topLeft + Point2D(r.width, r.height)};
 
     Point2D transformedCorners[4];
     for (int i = 0; i < 4; ++i) {
