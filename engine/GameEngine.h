@@ -30,6 +30,11 @@ public:
 
     void Run();
 
+    EngineView::const_iterator cbegin() const override;
+    EngineView::const_iterator cend() const override;
+    EngineView::const_iterator begin() const override;
+    EngineView::const_iterator end() const override;
+
 private:
     void RemoveDead();
     bool ProcessEvents(GameContext *context);

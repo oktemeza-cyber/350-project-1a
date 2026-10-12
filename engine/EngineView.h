@@ -15,10 +15,10 @@ public:
     //virtual void InstallKeyDownNotification(int, const std::string &notification) = 0; commenting these out because I don't want to implement them yet
 	//virtual void InstallKeyUpNotification(int, const std::string &notification) = 0;
 	using const_iterator = tGameObject::const_iterator;
-	//virtual const_iterator cbegin() const = 0;
-	//virtual const_iterator cend() const = 0;
-	//virtual const_iterator begin() const = 0;
-	//virtual const_iterator end() const = 0;
+	virtual const_iterator cbegin() const = 0;
+	virtual const_iterator cend() const = 0;
+	virtual const_iterator begin() const = 0;
+	virtual const_iterator end() const = 0;
 };
 
 }  // namespace CMPUT350
