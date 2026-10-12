@@ -148,15 +148,16 @@ int main()
         player->setSelf(player);
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
-
-            for (int x = 0; x < 8; x++)
+        const int count = 8; //enemy count
+        const float spacing = 768.0f / (count + 1);
+            for (int x = 0; x < count; x++)
             {
-                CMPUT350::Point2D slot(100 + x *200, 100);
+                CMPUT350::Point2D slot(spacing * (x + 1), 100);
 
                 std::vector<CMPUT350::Point2D> path;
                 path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
-                path.push_back(CMPUT350::Point2D(slot.x + 300.0f, 250.0f));
-                path.push_back(CMPUT350::Point2D(slot.x - 300.0f, 450.0f));
+                path.push_back(CMPUT350::Point2D(slot.x, 0.0f));
+                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
                 path.push_back(slot);
 
                 auto enemy = std::make_shared<Enemy1>(slot, path);

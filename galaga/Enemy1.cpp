@@ -35,5 +35,5 @@ bool Enemy1::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &tar
 }
 
 void Enemy1::RenderForeground(CMPUT350::GameContext *context){
-    context->ScreenContext->DrawRect(CMPUT350::Rect(GetLocation(), 12.0f), CMPUT350::Colors::red);
+    context->ScreenContext->DrawRect(CMPUT350::Rect(CMPUT350::Point2D(0,0), 12.0f), CMPUT350::Colors::red);
 }

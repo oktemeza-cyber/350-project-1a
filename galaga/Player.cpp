@@ -102,6 +102,7 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     context->ScreenContext->DrawRect(wings2, CMPUT350::Colors::red);
     context->ScreenContext->DrawRect(shipBody, CMPUT350::Colors::white);
     context->ScreenContext->DrawRect(cockpit, CMPUT350::Colors::yellow);
+    
 }
 //simply draws the ship as a collection of rects
 

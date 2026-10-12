@@ -5,7 +5,7 @@
 #include "Player.h"
 
 
-Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(path.front(), 15.0f), shapes{}, health(1), attacking(false),
+Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(CMPUT350::Point2D(0, 0), 15.0f), shapes{}, health(1), attacking(false),
 inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path){}
 
 
