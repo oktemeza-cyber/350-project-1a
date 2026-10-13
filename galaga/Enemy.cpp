@@ -1,12 +1,15 @@
 #include <vector>
 #include <cmath>
+#include <cstdlib> //rand for attack testing
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Player.h"
 
+int Enemy::arrivedEnemies = 0;
 
 Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(CMPUT350::Point2D(0, 0), 15.0f), shapes{}, health(1), attacking(false),
-inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path){}
+inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path),
+hasArrived(false), attackDelay(90 + rand() % 300), fireCooldown(0){ arrivedEnemies++;}
 
 
 void Enemy::Update(CMPUT350::GameContext* context)
@@ -29,7 +32,35 @@ void Enemy::Update(CMPUT350::GameContext* context)
         enemyLoc = bezier.GetPoint(progress);
     }
     else{
-        enemyLoc = formationLoc;
+        
+        float frame = static_cast<float>(context->currentFrame);
+        enemyLoc.x = formationLoc.x + 20.0f * std::sin(frame * 0.05f);
+        enemyLoc.y = formationLoc.y;
+
+        //temp
+        if(!hasArrived){
+            hasArrived = true;
+            arrivedEnemies--;
+        }
+
+        if(arrivedEnemies == 0 && !attacking){
+            attackDelay--;
+            if(attackDelay <= 0){
+                attackDelay = 90 + rand()  % 300;
+                //temp--this will just go to a specified corner rather than the player. Galaga will actually aim at the player
+                CMPUT350::Point2D target(context->ScreenContext->GetWindowWidth() / 2.0f, 900.0f);
+                Attack(context, target);
+            }
+        }
+    }
+
+    if(attacking){
+        fireCooldown--;
+        if(fireCooldown <= 0){
+            fireCooldown = 30;
+            auto b = std::make_shared<Bullet>(enemyLoc, CMPUT350::Point2D(0,1), false, weak_from_this());
+            context->mEngineView->AddGameObject(b);
+        }
     }
     sBounds = CMPUT350::Rect(enemyLoc, 15.0f);
 }
@@ -76,6 +107,10 @@ void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj
 void Enemy::Kill()
 {
     isAlive = false;
+    if(!hasArrived){
+        hasArrived = true;
+        arrivedEnemies--;
+    }
 }
 
 bool Enemy::IsAlive() const

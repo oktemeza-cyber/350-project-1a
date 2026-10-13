@@ -8,7 +8,7 @@
 #include <vector>
 #include "Bezier.h"
 
-class Enemy : public CMPUT350::CollisionObject
+class Enemy : public CMPUT350::CollisionObject, public std::enable_shared_from_this<Enemy> //REMOVE enable_shared_from_this LATER, galaga.cpp will handle attacking but this is for testing purposes (reference here: https://en.cppreference.com/cpp/memory/enable_shared_from_this)
 {
 public:
     Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path);
@@ -48,6 +48,12 @@ private:
     float progressMax;
     CMPUT350::Bezier bezier;  
     std::vector<CMPUT350::Shape> shapes;
+
+    //possible temp attack variable start
+    static int arrivedEnemies;
+    bool hasArrived;
+    int attackDelay;
+    int fireCooldown;
 };
 
 
