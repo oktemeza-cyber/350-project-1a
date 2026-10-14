@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Enemy1.h"
+#include "Enemy2.h"
+#include "Enemy3.h"
 #include "Stars.h"
 
 class Ball : public CMPUT350::CollisionObject
@@ -162,6 +164,41 @@ int main()
 
                 auto enemy = std::make_shared<Enemy1>(slot, path);
                 engine.AddGameObject(enemy);
+            
+
+
+            }
+
+            for (int x = 0; x < count; x++)
+            {
+                CMPUT350::Point2D slot(spacing * (x + 1), 200);
+
+                std::vector<CMPUT350::Point2D> path;
+                path.push_back(CMPUT350::Point2D(slot.x, -20.0f));
+                path.push_back(CMPUT350::Point2D(slot.x, 70.0f));
+                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
+                path.push_back(slot);
+
+                auto enemy2 = std::make_shared<Enemy2>(slot, path);
+                engine.AddGameObject(enemy2);
+
+
+            }
+
+            for (int x = 0; x < count; x++)
+            {
+                CMPUT350::Point2D slot(spacing * (x + 1), 300);
+
+                std::vector<CMPUT350::Point2D> path;
+                path.push_back(CMPUT350::Point2D(slot.x -100.0f, -50.0f));
+                path.push_back(CMPUT350::Point2D(slot.x + 150.0f, 70.0f));
+                path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
+                path.push_back(slot);
+
+                auto enemy3 = std::make_shared<Enemy3>(slot, path);
+                engine.AddGameObject(enemy3);
+
+
             }
         
         //for loop just for the rows of enemies in even space

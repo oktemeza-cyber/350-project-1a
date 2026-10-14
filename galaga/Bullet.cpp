@@ -49,7 +49,7 @@ void Bullet::RenderForeground(CMPUT350::GameContext* context)
         if(playerBullet){
             context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 20, 20));
         } else {
-            context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 60, 60));
+            context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 0, 255));
             //This is for the enemy but idk how different the colour will be--make sure to test later
         }
     }
