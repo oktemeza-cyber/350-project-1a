@@ -62,13 +62,6 @@ void GameEngine::Run() {
     mGContext.currentFrame = 0;
     mGContext.mNotificationManager = &mNotif;
 
-    // Default controls
-    InstallKeyDownNotification(Key::A, "MoveLeft"); // Add more if needed
-    InstallKeyUpNotification(Key::A, "StopLeft");
-    InstallKeyDownNotification(Key::D, "MoveRight");
-    InstallKeyUpNotification(Key::D, "StopRight");
-    InstallKeyDownNotification(Key::Space, "Shoot");
-
 
     while (mWindow->isOpen())  // window is open
     {

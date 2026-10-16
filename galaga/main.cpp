@@ -6,6 +6,7 @@
 #include "Enemy2.h"
 #include "Enemy3.h"
 #include "Stars.h"
+#include "Galaga.h"
 
 class Ball : public CMPUT350::CollisionObject
 {
@@ -146,6 +147,8 @@ int main()
      else
      {
         CMPUT350::GameEngine engine(768, 1024, "Galaga");
+        auto game = std::make_shared<Galaga>(768, 1024);
+        engine.AddGameObject(game);
         auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
         player->setSelf(player);
         engine.AddGameObject(player);
