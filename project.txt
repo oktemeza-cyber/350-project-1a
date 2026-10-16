@@ -1,0 +1,44 @@
+Implemented files:
+Engine
+- Bezier.h/.cpp
+- CollisionObject.h
+- DrawContext.h/.cpp
+- EngineView.h
+- FontData.h
+- GameContext.h
+- GameEngine.h/.cpp (moved position of clear to allow galaga to draw through game context)
+- GameObject.h/.cpp
+- GraphicsObject.h/.cpp
+- Keyboard.h
+- MathUtil.h
+- NotificationManager.h/.cpp
+Galaga
+- Bullet.h/.cpp
+- Enemy.h/.cpp
+- Enemy1.h/.cpp
+- Enemy2.h/.cpp
+- Enemy3.h/.cpp
+- Galaga.h/.cpp
+- main.cpp
+- Player.h/.cpp
+- RandHelper.h (helps keep random seeded)
+- Stars.h/.cpp
+
+Galaga game flow:
+Loads controls and Stars -> Waiting
+Waiting (Waiting for coin insert and pressing start) -> Startup
+Startup (Displays level and loads player, if not already loaded) -> WaveStart
+WaveStart (Loads wave of enemies) -> Playing
+Playing (Main section, controls game flow and checks if players dies or enemies have been cleared) -> Respawn, GameOver, Startup, Winning
+Respawn (Waits for enemies to stop moving and then respawns player) -> Playing
+GameOver (Player has died, displays score) -> Waiting
+Winning (player has won, displays score) -> Waiting
+
+Contributions
+Main Engine flow, Galaga flow and math - Noel ~50%
+Gameplay design, enemy ai and player controls - Mel ~50%
+
+Extra Credit:
+
+
+No AI was used.
