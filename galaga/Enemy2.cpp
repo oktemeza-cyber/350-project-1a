@@ -5,18 +5,24 @@
 #include "Player.h"
 #include "Enemy2.h"
 
-Enemy2::Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path): Enemy(loc, path){ health = 2;}
+Enemy2::Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando) : Enemy(loc, path, rando){ health = 2;}
 
 void Enemy2::Initialize(CMPUT350::GameContext *context){return;}
 
 void Enemy2::LateUpdate(CMPUT350::GameContext *context){return;}
 
-bool Enemy2::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target){
-    if (!inFormation){
+bool Enemy2::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target, int rando){
+    if (!inFormation || attacking || attackDelay > 0){
+        attackDelay = rando % 300;
         return false;
     }
     
-    CMPUT350::Point2D bottom(enemyLoc.x, 750.0f);
+    CMPUT350::Point2D bottom;
+    if (rando % 2 == 1){
+        bottom = CMPUT350::Point2D(target.x + 30.0f, 750.0f);
+    } else {
+        bottom = CMPUT350::Point2D(target.x - 30.0f, 750.0f);
+    }
 
     std::vector<CMPUT350::Point2D> pts;
 

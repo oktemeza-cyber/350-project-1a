@@ -93,10 +93,10 @@ void Player::RenderBackground(CMPUT350::GameContext* context){}
 
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
-    CMPUT350::Rect shipBody(playerLocation.x - 5.0f, playerLocation.y - 20.0f, 10.0f,30.0f);
-    CMPUT350::Rect wings(playerLocation.x - 20.0f, playerLocation.y - 10.0f, 40.0f, 10.0f);
-    CMPUT350::Rect wings2(playerLocation.x - 13.0f, playerLocation.y - 5.0f, 25.0f, 10.0f);
-    CMPUT350::Rect cockpit(playerLocation.x - 3.0f, playerLocation.y - 20.0f, 6.0, 6.0f);
+    CMPUT350::Rect shipBody(-5.0f, -20.0f, 10.0f,30.0f);
+    CMPUT350::Rect wings(-20.0f, -10.0f, 40.0f, 10.0f);
+    CMPUT350::Rect wings2(-13.0f, -5.0f, 25.0f, 10.0f);
+    CMPUT350::Rect cockpit(-3.0f, -20.0f, 6.0, 6.0f);
 
     
     context->ScreenContext->DrawRect(wings, CMPUT350::Colors::red);
@@ -143,7 +143,7 @@ const CMPUT350::Rect& Player::GetBounds()
 }
 
 CMPUT350::Point2D Player::GetLocation() const {
-    return CMPUT350::Point2D(0,0); // todo
+    return playerLocation;
 }
 
 float Player::GetRotation() const {

@@ -11,8 +11,11 @@
 class Enemy : public CMPUT350::CollisionObject, public std::enable_shared_from_this<Enemy> //REMOVE enable_shared_from_this LATER, galaga.cpp will handle attacking but this is for testing purposes (reference here: https://en.cppreference.com/cpp/memory/enable_shared_from_this)
 {
 public:
-    Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path);
-    virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
+    Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando);
+    virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target, int rando) = 0;
+
+    void PauseAttacking();
+    void UnpauseAttacking();
 
     // GameObject Functions
     void Update(CMPUT350::GameContext* context) override;
@@ -39,6 +42,9 @@ protected:
     CMPUT350::Point2D formationLoc;
     CMPUT350::Point2D enemyLoc;
   //protected variables so that other enemy types can use this but main can't access these
+
+    int attackDelay;// moved so I can use as balancing
+    bool pauseAttack;
     
 private:
     bool isAlive;
@@ -52,7 +58,6 @@ private:
     //possible temp attack variable start
     static int arrivedEnemies;
     bool hasArrived;
-    int attackDelay;
     int fireCooldown;
 };
 

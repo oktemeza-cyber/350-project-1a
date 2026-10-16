@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "MathUtil.h"
+#include "RandHelper.h"
 #include <string>
 
 enum class GameState { // Basically int, but named!
@@ -11,6 +12,7 @@ enum class GameState { // Basically int, but named!
     Startup,
     WaveStart,
     Playing,
+    Respawn,
     GameOver,
     Winning
 };
@@ -28,6 +30,9 @@ class Galaga : public CMPUT350::GameObject {
         int wave;
         bool coinInserted;
         CMPUT350::Point2D windowSize;
+        Randomizer randomizer;
+
+        int respawnTimer;
 };
 
 #endif // GALAGA_H

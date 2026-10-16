@@ -7,9 +7,9 @@
 
 int Enemy::arrivedEnemies = 0;
 
-Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(path.front(), 15.0f), health(1), attacking(false),
+Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando) : isAlive(true), sBounds(path.front(), 15.0f), health(1), attacking(false),
 inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path),
-hasArrived(false), attackDelay(90 + rand() % 300), fireCooldown(0){ arrivedEnemies++, shapes.push_back(CMPUT350::Shape(CMPUT350::Rect(CMPUT350::Point2D(0, 0), 15.0f)));}
+hasArrived(false), attackDelay(rando % 300), fireCooldown(0){ arrivedEnemies++, shapes.push_back(CMPUT350::Shape(CMPUT350::Rect(CMPUT350::Point2D(0, 0), 15.0f)));}
 
 
 void Enemy::Update(CMPUT350::GameContext* context)
@@ -43,21 +43,21 @@ void Enemy::Update(CMPUT350::GameContext* context)
             arrivedEnemies--;
         }
 
-        if(arrivedEnemies == 0 && !attacking){
+        if(arrivedEnemies == 0 && !attacking && !pauseAttack){
             attackDelay--;
-            if(attackDelay <= 0){
-                attackDelay = 90 + rand()  % 300;
-                //temp--this will just go to a specified corner rather than the player. Galaga will actually aim at the player
-                CMPUT350::Point2D target(context->ScreenContext->GetWindowWidth() / 2.0f, 900.0f);
-                Attack(context, target);
-            }
+            // if(attackDelay <= 0){
+            //     attackDelay = 90 + rand()  % 300;
+            //     //temp--this will just go to a specified corner rather than the player. Galaga will actually aim at the player
+            //     CMPUT350::Point2D target(context->ScreenContext->GetWindowWidth() / 2.0f, 900.0f);
+            //     Attack(context, target);
+            // }
         }
     }
 
     if(attacking){
         fireCooldown--;
         if(fireCooldown <= 0){
-            fireCooldown = 30;
+            fireCooldown = 60;
             auto b = std::make_shared<Bullet>(enemyLoc, CMPUT350::Point2D(0,1), false, weak_from_this());
             context->mEngineView->AddGameObject(b);
         }
@@ -138,4 +138,12 @@ float Enemy::GetRotation() const {
 
 const std::vector<CMPUT350::Shape>& Enemy::GetShapes() {
     return shapes; 
+}
+
+void Enemy::PauseAttacking(){
+    pauseAttack = true;
+}
+
+void Enemy::UnpauseAttacking(){
+    pauseAttack = false;
 }

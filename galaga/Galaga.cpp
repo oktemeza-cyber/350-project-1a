@@ -9,6 +9,7 @@
 #include "Enemy1.h"
 #include "Enemy2.h"
 #include "Enemy3.h"
+
 #include <memory>
 #include <string>
 #include <iostream>
@@ -42,7 +43,6 @@ void Galaga::Initialize(CMPUT350::GameContext *context) {
 
     coinInserted = false;
     gameState = GameState::LoadStars;
-
 }
 
 void Galaga::Update(CMPUT350::GameContext *context) {
@@ -54,12 +54,12 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         }
         case GameState::Waiting: {
             // Waiting, do nothing
-            context->GUIContext->DrawCenteredText("Galaga!!", 35, windowSize * 0.5f, CMPUT350::Colors::white);
+            context->GUIContext->DrawCenteredText("Galaga!!", 35, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::white);
 
             if (!coinInserted){
-                context->GUIContext->DrawCenteredText("Insert Coin", 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::yellow);
+                context->GUIContext->DrawCenteredText("Insert Coin", 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
             } else {
-                context->GUIContext->DrawCenteredText("Press Play", 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::yellow);
+                context->GUIContext->DrawCenteredText("Press Play", 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
             }
 
             context->currentFrame = 0;
@@ -84,8 +84,8 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 context->mEngineView->AddGameObject(player);
             }
 
-            context->GUIContext->DrawCenteredText("Level " + std::to_string(wave), 30, windowSize * 0.5f, CMPUT350::Colors::white);
-            context->GUIContext->DrawCenteredText(std::to_string(score), 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::yellow);
+            context->GUIContext->DrawCenteredText("Level " + std::to_string(wave), 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::white);
+            context->GUIContext->DrawCenteredText(std::to_string(score), 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
 
             if (context->currentFrame >= 150){
                 gameState = GameState::WaveStart;
@@ -107,7 +107,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
                 path.push_back(slot);
 
-                auto enemy = std::make_shared<Enemy1>(slot, path);
+                auto enemy = std::make_shared<Enemy1>(slot, path, randomizer.GetRand());
                 context->mEngineView->AddGameObject(enemy);
             }
 
@@ -121,7 +121,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
                 path.push_back(slot);
 
-                auto enemy2 = std::make_shared<Enemy2>(slot, path);
+                auto enemy2 = std::make_shared<Enemy2>(slot, path, randomizer.GetRand());
                 context->mEngineView->AddGameObject(enemy2);
             }
 
@@ -135,7 +135,7 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
                 path.push_back(slot);
 
-                auto enemy3 = std::make_shared<Enemy3>(slot, path);
+                auto enemy3 = std::make_shared<Enemy3>(slot, path, randomizer.GetRand());
                 context->mEngineView->AddGameObject(enemy3);
             }
         
@@ -146,23 +146,31 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         }
         case GameState::Playing: {
             // Main game loop logic
+            context->GUIContext->DrawCenteredText(std::to_string(score), 20, (windowSize * 0.5f) - CMPUT350::Point2D(0, 500), CMPUT350::Colors::yellow);
 
-            // Player died or wave cleared
             int remainingEnemies = 0;
             bool playerExists = false;
-            bool enemiesExist = false;            
-            for (const auto& gameObject : *context->mEngineView) {
-                if (std::dynamic_pointer_cast<Player>(gameObject)) {
-                    playerExists = true;
-                }
+            bool enemiesExist = false;  
+            std::weak_ptr<Player> playerPoint;
 
-                if (std::dynamic_pointer_cast<Enemy>(gameObject)) {
+            for (const auto& gameObject : *context->mEngineView) {
+                auto player = std::dynamic_pointer_cast<Player>(gameObject);
+                if (player) {
+                    playerExists = true;
+                    playerPoint = player;
+                }
+            }
+
+            for (const auto& gameObject : *context->mEngineView) {
+                auto enemy = std::dynamic_pointer_cast<Enemy>(gameObject);
+                if (enemy) {
                     enemiesExist = true;
                     remainingEnemies++;
-                }
-
-                if (playerExists && enemiesExist) {
-                    break;
+                    if (playerExists){
+                        enemy->Attack(context, playerPoint.lock()->GetLocation(), randomizer.GetRand());
+                    } else {
+                        enemy->PauseAttacking();
+                    }
                 }
             }
 
@@ -177,14 +185,9 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                     break;
                 }
 
-                auto player = std::make_shared<Player>(
-                    CMPUT350::Point2D(768 / 2, 900)
-                );
-                player->setSelf(player);
-                context->mEngineView->AddGameObject(player);
-            }
-
-            if (!enemiesExist) {
+                respawnTimer = context->currentFrame + 180;
+                gameState = GameState::Respawn;
+            } else if (!enemiesExist) {
                 if (wave >= 5) {
                     context->currentFrame = 0;
                     gameState = GameState::Winning;
@@ -197,6 +200,28 @@ void Galaga::Update(CMPUT350::GameContext *context) {
 
             break;
         }
+        case GameState::Respawn: {
+            context->GUIContext->DrawCenteredText("Lives left: " + std::to_string(lives), 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::white);
+            context->GUIContext->DrawCenteredText(std::to_string(score), 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
+
+            if (context->currentFrame >= respawnTimer){
+                auto player = std::make_shared<Player>(
+                    CMPUT350::Point2D(768 / 2, 900)
+                );
+                player->setSelf(player);
+                context->mEngineView->AddGameObject(player);
+
+                for (const auto& gameObject : *context->mEngineView) {
+                    auto enemy = std::dynamic_pointer_cast<Enemy>(gameObject);
+                    if (enemy) {
+                        enemy->UnpauseAttacking();
+                    }
+                }
+
+                gameState = GameState::Playing;
+            }
+            break;
+        }
         case GameState::GameOver: {
             // Wait for small period and then return to waiting
             for (const auto& gameObject : *context->mEngineView) {
@@ -205,8 +230,8 @@ void Galaga::Update(CMPUT350::GameContext *context) {
                 }
             }
 
-            context->GUIContext->DrawCenteredText("Game Over", 30, windowSize * 0.5f, CMPUT350::Colors::red);
-            context->GUIContext->DrawCenteredText(std::to_string(score), 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::yellow);
+            context->GUIContext->DrawCenteredText("Game Over", 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::red);
+            context->GUIContext->DrawCenteredText(std::to_string(score), 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
 
             if (context->currentFrame >= 150){
                 context->currentFrame = 0;
@@ -216,8 +241,8 @@ void Galaga::Update(CMPUT350::GameContext *context) {
         }
         case GameState::Winning: {
             // Wait for small period and then return to waiting
-            context->GUIContext->DrawCenteredText("You won!", 30, windowSize * 0.5f, CMPUT350::Colors::white);
-            context->GUIContext->DrawCenteredText(std::to_string(score), 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::yellow);
+            context->GUIContext->DrawCenteredText("You won!", 30, (windowSize * 0.5f) - CMPUT350::Point2D(0, 100), CMPUT350::Colors::white);
+            context->GUIContext->DrawCenteredText(std::to_string(score), 30, windowSize * 0.5f, CMPUT350::Colors::yellow);
 
             if (context->currentFrame >= 150){
                 context->currentFrame = 0;

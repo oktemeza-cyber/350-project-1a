@@ -11,10 +11,10 @@
 
 class Enemy2 : public Enemy {
 public:
-	Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path);
+	Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando);
 	void Initialize(CMPUT350::GameContext *context) override;
 	void LateUpdate(CMPUT350::GameContext *context) override;
-	bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
+	bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target, int rando) override;
 	void RenderForeground(CMPUT350::GameContext *context) override;
 };
 #endif
