@@ -7,9 +7,9 @@
 
 int Enemy::arrivedEnemies = 0;
 
-Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(CMPUT350::Point2D(0, 0), 15.0f), shapes{}, health(1), attacking(false),
+Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path) : isAlive(true), sBounds(path.front(), 15.0f), health(1), attacking(false),
 inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path),
-hasArrived(false), attackDelay(90 + rand() % 300), fireCooldown(0){ arrivedEnemies++;}
+hasArrived(false), attackDelay(90 + rand() % 300), fireCooldown(0){ arrivedEnemies++, shapes.push_back(CMPUT350::Shape(CMPUT350::Rect(CMPUT350::Point2D(0, 0), 15.0f)));}
 
 
 void Enemy::Update(CMPUT350::GameContext* context)
@@ -20,7 +20,7 @@ void Enemy::Update(CMPUT350::GameContext* context)
 
         if(len > 0.000f){
             progress += 8.0/len;
-            rotation = std::atan2(slope.y, slope.x) * 180.0f / 3.14159265f;
+            rotation = std::atan2(slope.y, slope.x);
         }
 
         if(progress >= progressMax){
@@ -62,6 +62,7 @@ void Enemy::Update(CMPUT350::GameContext* context)
             context->mEngineView->AddGameObject(b);
         }
     }
+    
     sBounds = CMPUT350::Rect(enemyLoc, 15.0f);
 }
 
@@ -84,11 +85,13 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj){
-    CollisionEnter(obj, enemyLoc);
+    CollisionEnter(obj, CMPUT350::Point2D(0.0f, 0.0f));
 }
 
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D &collisionPoint)
 {
+    
+
     Bullet* bullet = dynamic_cast<Bullet*>(obj.get());
         if(bullet != nullptr && bullet->IsPlayerBullet()){
             health--;
@@ -101,6 +104,8 @@ void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj
         if(dynamic_cast<Player *>(obj.get()) != nullptr){
             Kill();
         }
+
+    
 }
 //check if the bullet exists and the bullet is a player bullet, then kill the enemy and the bullet
 
@@ -124,13 +129,13 @@ const CMPUT350::Rect& Enemy::GetBounds()
 }
 
 CMPUT350::Point2D Enemy::GetLocation() const {
-    return enemyLoc; // todo
+    return enemyLoc; 
 }
 
 float Enemy::GetRotation() const {
-    return rotation; // todo
+    return rotation; 
 }
 
 const std::vector<CMPUT350::Shape>& Enemy::GetShapes() {
-    return shapes; // todo
+    return shapes; 
 }

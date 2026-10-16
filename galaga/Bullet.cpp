@@ -1,6 +1,7 @@
 #include <vector> 
 #include "Bullet.h"
 #include "Player.h"
+#include "Enemy.h"
 
 Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool player, std::weak_ptr<CMPUT350::GameObject> parent): isAlive(true), playerBullet(player), 
 start(location), final(heading), previous(location), bounds(location, location), parent(parent), hasHit(false), hitPoint(location){}
@@ -23,15 +24,19 @@ void Bullet::Update(CMPUT350::GameContext* context)
     start.x += final.x * 10.0f;
     start.y += final.y * 10.0f;
 
+    shapes.clear();
+    shapes.push_back(CMPUT350::Shape(CMPUT350::Line(previous - start, CMPUT350::Point2D(0, 0))));
+
     bounds = CMPUT350::Rect(previous, start);
     bounds.topLeft.x -= 1.0f;
     bounds.width += 2.0f;
 
 
-    if(start.y < 0){
+    if(start.y < 0 || start.y > context->ScreenContext->GetWindowHeight()){
         Kill();
     }
     
+   
 }
 
 void Bullet::LateUpdate(CMPUT350::GameContext* context)
@@ -44,7 +49,9 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 
 void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
-    if(isAlive){
+    if (hasHit){
+        context->ScreenContext->DrawCircle(hitPoint, 5.0f, CMPUT350::Colors::green);
+    } else if(isAlive){
 
         if(playerBullet){
             context->ScreenContext->DrawLine(previous, start, 2.0f, CMPUT350::RGBColor(255, 20, 20));
@@ -53,28 +60,38 @@ void Bullet::RenderForeground(CMPUT350::GameContext* context)
             //This is for the enemy but idk how different the colour will be--make sure to test later
         }
     }
-    else if (hasHit){
-        context->ScreenContext->DrawCircle(hitPoint, 5.0f, CMPUT350::Colors::green);
-    }
+    
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
-    CollisionEnter(obj, start);
+    CollisionEnter(obj, CMPUT350::Point2D(0.0f, 0.0f));
 }
 
 void Bullet::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj, const CMPUT350::Point2D& collisionPoint){
+    if(hasHit){
+        return;
+    }
+
     if(obj.get() == parent.lock().get()){
         return;
     }
     //ignores the ship for collision 
 
-    if(!hasHit || collisionPoint.y > hitPoint.y){
-        hitPoint = collisionPoint;
-        hasHit = true;
-    } //if hasHit is false or the collisionPoint (y) is higher than hitPoint (y), make the hitpoint equal to the collisionPoint which marks the hit
+    if(playerBullet){
+        if (dynamic_cast<Enemy *>(obj.get()) == nullptr){
+            return;
+        }
+    } else {
+        if (dynamic_cast<Player *>(obj.get()) == nullptr){
+            return;
+        }
+    }
+
+    hitPoint = start + collisionPoint;
+    hasHit = true;
     Kill();
-    //kill no matter what after collision
+     //kill no matter what after collision
 }
 
 
@@ -98,11 +115,11 @@ CMPUT350::Point2D Bullet::GetLocation() const {
 }
 
 float Bullet::GetRotation() const {
-    return 0.0f; // todo
+    return 0.0f; 
 }
 
 const std::vector<CMPUT350::Shape>& Bullet::GetShapes() {
-    return shapes; // todo
+    return shapes; 
 }
 
     

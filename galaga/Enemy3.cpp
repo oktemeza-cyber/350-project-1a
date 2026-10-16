@@ -35,5 +35,11 @@ bool Enemy3::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &tar
 }
 
 void Enemy3::RenderForeground(CMPUT350::GameContext *context){
-    context->ScreenContext->DrawRect(CMPUT350::Rect(CMPUT350::Point2D(0,0), 8.0f), CMPUT350::Colors::green);
+    if(health >= 3){
+        context->ScreenContext->DrawRect(CMPUT350::Rect(CMPUT350::Point2D(0,0), 8.0f), CMPUT350::Colors::green);
+    } else if(health >= 2){
+        context->ScreenContext->DrawRect(CMPUT350::Rect(CMPUT350::Point2D(0,0), 8.0f), CMPUT350::Colors::blue);
+    } else {
+        context->ScreenContext->DrawRect(CMPUT350::Rect(CMPUT350::Point2D(0,0), 8.0f), CMPUT350::Colors::grey);
+    }
 }

@@ -35,5 +35,10 @@ bool Enemy2::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &tar
 }
 
 void Enemy2::RenderForeground(CMPUT350::GameContext *context){
-    context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 6.0f, CMPUT350::Colors::yellow);
+    if(health >= 2){
+         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 6.0f, CMPUT350::Colors::yellow);
+    } else {
+         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 6.0f, CMPUT350::Colors::white);
+    }
+   
 }

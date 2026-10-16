@@ -3,6 +3,7 @@
 #include <memory>
 #include "Player.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 Player::Player(CMPUT350::Point2D loc): isAlive(true), playerLocation(loc), playerBounds(playerLocation, 20.0f), shapes{}
 {}
@@ -106,13 +107,22 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
 }
 //simply draws the ship as a collection of rects
 
-void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
+void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject> &obj){
+    CollisionEnter(obj, playerLocation);
+}
+
+void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>&obj, const CMPUT350::Point2D &collisionPoint)
 {
      Bullet* bullet = dynamic_cast<Bullet*>(obj.get());
         if(bullet != nullptr && !bullet->IsPlayerBullet()){
             Kill();  
             bullet->Kill();
+            return;
         }  
+
+        if(dynamic_cast<Enemy *>(obj.get()) != nullptr){
+            Kill();
+        }
 }
 //checks to see if the bullet exists and IsPlayerBullet is false, but playerBullet is automatically true in player.cpp on creation, so the bullet SHOULD never delete
 //when its first created

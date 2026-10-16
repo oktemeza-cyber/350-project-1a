@@ -27,7 +27,8 @@ public:
     float GetRotation() const override;
 
     // Collision Object Functions
-    void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
+    void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject> &obj) override;
+	void CollisionEnter(const std::shared_ptr<CollisionObject> &obj, const CMPUT350::Point2D &collisionPoint) override;
     const CMPUT350::Rect& GetBounds() override;
     const std::vector<CMPUT350::Shape>& GetShapes() override;
 
