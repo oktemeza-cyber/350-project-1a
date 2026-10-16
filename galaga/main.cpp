@@ -149,60 +149,60 @@ int main()
         CMPUT350::GameEngine engine(768, 1024, "Galaga");
         auto game = std::make_shared<Galaga>(768, 1024);
         engine.AddGameObject(game);
-        auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
-        player->setSelf(player);
-        engine.AddGameObject(player);
-        engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
-        const int count = 8; //enemy count
-        const float spacing = 768.0f / (count + 1);
-            for (int x = 0; x < count; x++)
-            {
-                CMPUT350::Point2D slot(spacing * (x + 1), 100);
+        // auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
+        // player->setSelf(player);
+        // engine.AddGameObject(player);
+        // engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
+        // const int count = 8; //enemy count
+        // const float spacing = 768.0f / (count + 1);
+        //     for (int x = 0; x < count; x++)
+        //     {
+        //         CMPUT350::Point2D slot(spacing * (x + 1), 100);
 
-                std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 0.0f));
-                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
-                path.push_back(slot);
+        //         std::vector<CMPUT350::Point2D> path;
+        //         path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x, 0.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
+        //         path.push_back(slot);
 
-                auto enemy = std::make_shared<Enemy1>(slot, path);
-                engine.AddGameObject(enemy);
+        //         auto enemy = std::make_shared<Enemy1>(slot, path);
+        //         engine.AddGameObject(enemy);
             
 
 
-            }
+        //     }
 
-            for (int x = 0; x < count; x++)
-            {
-                CMPUT350::Point2D slot(spacing * (x + 1), 200);
+        //     for (int x = 0; x < count; x++)
+        //     {
+        //         CMPUT350::Point2D slot(spacing * (x + 1), 200);
 
-                std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x, -20.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 70.0f));
-                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
-                path.push_back(slot);
+        //         std::vector<CMPUT350::Point2D> path;
+        //         path.push_back(CMPUT350::Point2D(slot.x, -20.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x, 70.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
+        //         path.push_back(slot);
 
-                auto enemy2 = std::make_shared<Enemy2>(slot, path);
-                engine.AddGameObject(enemy2);
-
-
-            }
-
-            for (int x = 0; x < count; x++)
-            {
-                CMPUT350::Point2D slot(spacing * (x + 1), 300);
-
-                std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x -100.0f, -50.0f));
-                path.push_back(CMPUT350::Point2D(slot.x + 150.0f, 70.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
-                path.push_back(slot);
-
-                auto enemy3 = std::make_shared<Enemy3>(slot, path);
-                engine.AddGameObject(enemy3);
+        //         auto enemy2 = std::make_shared<Enemy2>(slot, path);
+        //         engine.AddGameObject(enemy2);
 
 
-            }
+        //     }
+
+        //     for (int x = 0; x < count; x++)
+        //     {
+        //         CMPUT350::Point2D slot(spacing * (x + 1), 300);
+
+        //         std::vector<CMPUT350::Point2D> path;
+        //         path.push_back(CMPUT350::Point2D(slot.x -100.0f, -50.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x + 150.0f, 70.0f));
+        //         path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
+        //         path.push_back(slot);
+
+        //         auto enemy3 = std::make_shared<Enemy3>(slot, path);
+        //         engine.AddGameObject(enemy3);
+
+
+        //     }
         
         //for loop just for the rows of enemies in even space
         engine.Run();

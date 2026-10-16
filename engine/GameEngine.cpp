@@ -65,11 +65,14 @@ void GameEngine::Run() {
 
     while (mWindow->isOpen())  // window is open
     {
+        mWindow->clear(sf::Color::Black); //moved here so that drawing from update was possible (for text)
+
         // 0. Remove any objects that are now dead
         RemoveDead();
 
         // 1. Activate and initialize any objects added during the last frame
         for (auto& newObj : mPending) {
+            mGContext.CurrObject = newObj;
             newObj->Initialize(&mGContext);
             mGameObjects.push_back(newObj);
         }
@@ -80,6 +83,7 @@ void GameEngine::Run() {
 
         // 3. Update game objects
         for (auto& obj : mGameObjects) {
+            mGContext.CurrObject = obj;
             obj->Update(&mGContext);
         }
 
@@ -103,11 +107,12 @@ void GameEngine::Run() {
 
         // 5. Late updates
         for (auto& obj : mGameObjects) {
+            mGContext.CurrObject = obj;
             obj->LateUpdate(&mGContext);
         }
 
         // Clear window
-        mWindow->clear(sf::Color::Black);
+        //mWindow->clear(sf::Color::Black);
 
         // 6. Render background
         for (size_t i = 0; i < mGameObjects.size(); i++){

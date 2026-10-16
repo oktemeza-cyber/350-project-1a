@@ -3,13 +3,16 @@
 
 #include "GameObject.h"
 #include "MathUtil.h"
+#include <string>
 
 enum class GameState { // Basically int, but named!
+    LoadStars,
     Waiting,
     Startup,
     WaveStart,
     Playing,
-    GameOver
+    GameOver,
+    Winning
 };
 
 class Galaga : public CMPUT350::GameObject {
