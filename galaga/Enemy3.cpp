@@ -7,8 +7,13 @@
 
 Enemy3::Enemy3(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando): Enemy(loc, path, rando){ health = 3;}
 
-void Enemy3::Initialize(CMPUT350::GameContext *context){return;}
+void Enemy3::Initialize(CMPUT350::GameContext *context){
+    localShapes.clear();
 
+    localShapes.emplace_back(CMPUT350::Rect(CMPUT350::Point2D(0,0), 8.5f));
+
+    return;
+}
 void Enemy3::LateUpdate(CMPUT350::GameContext *context){return;}
 
 bool Enemy3::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target, int rando){

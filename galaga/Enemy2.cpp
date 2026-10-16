@@ -7,7 +7,13 @@
 
 Enemy2::Enemy2(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando) : Enemy(loc, path, rando){ health = 2;}
 
-void Enemy2::Initialize(CMPUT350::GameContext *context){return;}
+void Enemy2::Initialize(CMPUT350::GameContext *context){
+    localShapes.clear();
+
+    localShapes.emplace_back(CMPUT350::Circle(CMPUT350::Point2D(0, 0), 8.5f));
+
+    return;
+}
 
 void Enemy2::LateUpdate(CMPUT350::GameContext *context){return;}
 
@@ -42,9 +48,9 @@ bool Enemy2::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &tar
 
 void Enemy2::RenderForeground(CMPUT350::GameContext *context){
     if(health >= 2){
-         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 6.0f, CMPUT350::Colors::yellow);
+         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 8.0f, CMPUT350::Colors::yellow);
     } else {
-         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 6.0f, CMPUT350::Colors::white);
+         context->ScreenContext->DrawCircle(CMPUT350::Point2D(0,0), 8.0f, CMPUT350::Colors::white);
     }
    
 }

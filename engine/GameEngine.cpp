@@ -10,6 +10,69 @@
 namespace CMPUT350 {
 #include "FontData.h"
 
+//Big boy switch statement converts shapes into separate parts.
+bool ShapesOverlap(const Shape& a, const Shape& b) {
+    switch (a.t) {
+        case ShapeType::kLine:
+            switch (b.t) {
+                case ShapeType::kLine:
+                    return LineLine(a.shape.line, b.shape.line);
+
+                case ShapeType::kCircle:
+                    return LineCircle(
+                        a.shape.line, b.shape.circle
+                    );
+
+                case ShapeType::kRect:
+                    return LineRect(
+                        a.shape.line, b.shape.rect
+                    );
+            }
+            break;
+
+        case ShapeType::kCircle:
+            switch (b.t) {
+                case ShapeType::kLine:
+                    return LineCircle(
+                        b.shape.line, a.shape.circle
+                    );
+
+                case ShapeType::kCircle:
+                    return CircleCircle(
+                        a.shape.circle, b.shape.circle
+                    );
+
+                case ShapeType::kRect:
+                    return RectCircle(
+                        b.shape.rect, a.shape.circle
+                    );
+            }
+            break;
+
+        case ShapeType::kRect:
+            switch (b.t) {
+                case ShapeType::kLine:
+                    return LineRect(
+                        b.shape.line, a.shape.rect
+                    );
+
+                case ShapeType::kCircle:
+                    return RectCircle(
+                        a.shape.rect, b.shape.circle
+                    );
+
+                case ShapeType::kRect:
+                    return RectRect(
+                        a.shape.rect, b.shape.rect
+                    );
+            }
+            break;
+    }
+
+    return false;
+}
+
+
 void GameEngine::RemoveDead() {
     // Taken from asteroids
     std::vector<std::shared_ptr<GameObject>> aux;
@@ -99,8 +162,25 @@ void GameEngine::Run() {
                 const Rect &bBounds = objB->GetBounds();
 
                 if (RectIntersects(aBounds, bBounds)){
-                    objA->CollisionEnter(objB);
-                    objB->CollisionEnter(objA);
+                    const auto& shapesA = objA->GetShapes();
+                    const auto& shapesB = objB->GetShapes();
+                    bool collided = false;
+
+                    for (const Shape& a : shapesA) {
+                        for (const Shape& b : shapesB) {
+                            if (ShapesOverlap(a, b)) {
+                                collided = true;
+                                break;
+                            }
+                        }
+
+                        if (collided) break;
+                    }
+
+                    if (collided) {
+                        objA->CollisionEnter(objB);
+                        objB->CollisionEnter(objA);
+                    }
                 }
             }
         }
@@ -112,7 +192,7 @@ void GameEngine::Run() {
         }
 
         // Clear window
-        //mWindow->clear(sf::Color::Black);
+        //mWindow->clear(sf::Color::Black); moved so galaga can draw text.
 
         // 6. Render background
         for (size_t i = 0; i < mGameObjects.size(); i++){
@@ -154,7 +234,6 @@ bool GameEngine::ProcessEvents(GameContext *context)
         }
         else if (event->is<sf::Event::Resized>())
         {
-            // I dunno i'll fix this later, I need research here
             return true;
         }
         else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())

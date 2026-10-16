@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 namespace CMPUT350 {
 
@@ -290,6 +291,74 @@ static std::ostream &operator<<(std::ostream &os, const Rect &l) {
     os << "(" << l.topLeft.x << "," << l.topLeft.y << ")-(" << l.width << " x " << l.height << ")";
     return os;
 }
+
+
+// All different shape checks
+static bool CircleCircle(const Circle& a, const Circle& b) {
+    float dx = a.center.x - b.center.x;
+    float dy = a.center.y - b.center.y;
+    float r = a.radius + b.radius;
+
+    return dx * dx + dy * dy <= r * r;
+}
+
+static bool LineCircle(const Line& line, const Circle& circle) {
+    Point2D closest = line.ClosestPoint(circle.center);
+
+    float dx = closest.x - circle.center.x;
+    float dy = closest.y - circle.center.y;
+
+    return dx * dx + dy * dy <= circle.radius * circle.radius;
+}
+
+static bool RectCircle(const Rect& rect, const Circle& circle) {
+    float closestX = std::clamp(
+        circle.center.x,
+        rect.topLeft.x,
+        rect.topLeft.x + rect.width
+    );
+
+    float closestY = std::clamp(
+        circle.center.y,
+        rect.topLeft.y,
+        rect.topLeft.y + rect.height
+    );
+
+    float dx = circle.center.x - closestX;
+    float dy = circle.center.y - closestY;
+
+    return dx * dx + dy * dy <= circle.radius * circle.radius;
+}
+
+static bool LineLine(const Line& a, const Line& b) { //Already done, but I want a consistent naming scheme.
+    Point2D intersection;
+    return a.Crosses(b, intersection);
+}
+
+static bool RectRect(const Rect& a, const Rect& b) { //Ditto
+    return RectIntersects(a, b);
+}
+
+static bool LineRect(const Line& line, const Rect& rect) {
+    if (rect.IsInside(line.p1) || rect.IsInside(line.p2)) {
+        return true;
+    }
+
+    Point2D tl = rect.topLeft;
+    Point2D tr(tl.x + rect.width, tl.y);
+    Point2D bl(tl.x, tl.y + rect.height);
+    Point2D br(tl.x + rect.width, tl.y + rect.height);
+
+    Line top(tl, tr);
+    Line bottom(bl, br);
+    Line left(tl, bl);
+    Line right(tr, br);
+
+    Point2D intersection;
+
+    return line.Crosses(top, intersection) || line.Crosses(bottom, intersection) || line.Crosses(left, intersection) || line.Crosses(right, intersection);
+}
+
 
 }  // namespace CMPUT350
 

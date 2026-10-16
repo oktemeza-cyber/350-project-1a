@@ -38,6 +38,7 @@ private:
     CMPUT350::Rect playerBounds;
     std::weak_ptr<Bullet> activeBullets[2];
     std::vector<CMPUT350::Shape> shapes;
+    std::vector<CMPUT350::Shape> worldShapes;
     std::weak_ptr<CMPUT350::GameObject> self; //parent continued 
 
     bool movingLeft = false;

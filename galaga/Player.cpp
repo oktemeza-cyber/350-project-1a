@@ -19,6 +19,13 @@ void Player::Initialize(CMPUT350::GameContext* context){
     context->mNotificationManager->Register(self, "StopLeft");
     context->mNotificationManager->Register(self, "StopRight");
     context->mNotificationManager->Register(self, "Shoot");
+
+    shapes.clear();
+
+    shapes.emplace_back(CMPUT350::Rect(-5.0f, -20.0f, 10.0f, 30.0f));
+    shapes.emplace_back(CMPUT350::Rect(-20.0f, -10.0f, 40.0f, 10.0f));
+    shapes.emplace_back(CMPUT350::Rect(-13.0f, -5.0f, 25.0f, 10.0f));
+    shapes.emplace_back(CMPUT350::Rect(-3.0f, -20.0f, 6.0f, 6.0f));
 }
 //no assets need initializing
 
@@ -147,9 +154,37 @@ CMPUT350::Point2D Player::GetLocation() const {
 }
 
 float Player::GetRotation() const {
-    return 0; // todo
+    return 0;
 }
 
 const std::vector<CMPUT350::Shape>& Player::GetShapes() {
-    return shapes; // todo
+    worldShapes.clear();
+
+    for (const auto& shape : shapes) {
+        switch (shape.t) {
+            case CMPUT350::ShapeType::kLine: {
+                CMPUT350::Line line = shape.shape.line;
+                line.p1 += playerLocation;
+                line.p2 += playerLocation;
+                worldShapes.emplace_back(line);
+                break;
+            }
+
+            case CMPUT350::ShapeType::kCircle: {
+                CMPUT350::Circle circle = shape.shape.circle;
+                circle.center += playerLocation;
+                worldShapes.emplace_back(circle);
+                break;
+            }
+
+            case CMPUT350::ShapeType::kRect: {
+                CMPUT350::Rect rect = shape.shape.rect;
+                rect += playerLocation;
+                worldShapes.emplace_back(rect);
+                break;
+            }
+        }
+    }
+
+    return worldShapes;
 }

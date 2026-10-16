@@ -25,7 +25,8 @@ void Bullet::Update(CMPUT350::GameContext* context)
     start.y += final.y * 10.0f;
 
     shapes.clear();
-    shapes.push_back(CMPUT350::Shape(CMPUT350::Line(previous - start, CMPUT350::Point2D(0, 0))));
+    shapes.push_back(CMPUT350::Shape(CMPUT350::Line(previous, start)));
+
 
     bounds = CMPUT350::Rect(previous, start);
     bounds.topLeft.x -= 1.0f;

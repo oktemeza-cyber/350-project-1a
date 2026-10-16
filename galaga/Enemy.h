@@ -45,15 +45,18 @@ protected:
 
     int attackDelay;// moved so I can use as balancing
     bool pauseAttack;
+    std::vector<CMPUT350::Shape> localShapes;
+    CMPUT350::Rect sBounds;
     
 private:
+    void UpdateCollisionShapes();
+
     bool isAlive;
-    CMPUT350::Rect sBounds;
     float rotation;
     float progress;
     float progressMax;
     CMPUT350::Bezier bezier;  
-    std::vector<CMPUT350::Shape> shapes;
+    std::vector<CMPUT350::Shape> shapes; //for world space
 
     //possible temp attack variable start
     static int arrivedEnemies;

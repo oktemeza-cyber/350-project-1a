@@ -9,7 +9,7 @@ int Enemy::arrivedEnemies = 0;
 
 Enemy::Enemy(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D> &path, int rando) : isAlive(true), sBounds(path.front(), 15.0f), health(1), attacking(false),
 inFormation(false), formationLoc(loc), enemyLoc(path.front()), rotation(0.0f), progress(0.0f), progressMax(static_cast<float>((path.size() - 1) / 3)), bezier(path),
-hasArrived(false), attackDelay(rando % 300), fireCooldown(0){ arrivedEnemies++, shapes.push_back(CMPUT350::Shape(CMPUT350::Rect(CMPUT350::Point2D(0, 0), 15.0f)));}
+hasArrived(false), attackDelay(rando % 300), fireCooldown(0){ arrivedEnemies++;}
 
 
 void Enemy::Update(CMPUT350::GameContext* context)
@@ -63,7 +63,7 @@ void Enemy::Update(CMPUT350::GameContext* context)
         }
     }
     
-    sBounds = CMPUT350::Rect(enemyLoc, 15.0f);
+    UpdateCollisionShapes();
 }
 
 void Enemy::startPath(const std::vector<CMPUT350::Point2D> &controlPoints){
@@ -147,3 +147,37 @@ void Enemy::PauseAttacking(){
 void Enemy::UnpauseAttacking(){
     pauseAttack = false;
 }
+
+void Enemy::UpdateCollisionShapes() // Converts local space to global space for collisions
+{
+    shapes.clear();
+
+    for (const auto& shape : localShapes) {
+        switch (shape.t) {
+            case CMPUT350::ShapeType::kLine: {
+                CMPUT350::Line line = shape.shape.line;
+                line.p1 += enemyLoc;
+                line.p2 += enemyLoc;
+                shapes.emplace_back(line);
+                break;
+            }
+
+            case CMPUT350::ShapeType::kCircle: {
+                CMPUT350::Circle circle = shape.shape.circle;
+                circle.center += enemyLoc;
+                shapes.emplace_back(circle);
+                break;
+            }
+
+            case CMPUT350::ShapeType::kRect: {
+                CMPUT350::Rect rect = shape.shape.rect;
+                rect += enemyLoc;
+                shapes.emplace_back(rect);
+                break;
+            }
+        }
+    }
+
+    sBounds = CMPUT350::Rect(enemyLoc, 15.0f);
+}
+
