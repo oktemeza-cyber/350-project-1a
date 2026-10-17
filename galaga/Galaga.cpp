@@ -97,49 +97,42 @@ void Galaga::Update(CMPUT350::GameContext *context) {
             
             const int count = 8; //enemy count
             const float spacing = 768.0f / (count + 1);
-            for (int x = 0; x < count; x++)
-            {
-                CMPUT350::Point2D slot(spacing * (x + 1), 100);
-
-                std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 0.0f));
-                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
-                path.push_back(slot);
-
-                auto enemy = std::make_shared<Enemy1>(slot, path, randomizer.GetRand());
-                context->mEngineView->AddGameObject(enemy);
-            }
 
             for (int x = 0; x < count; x++)
             {
-                CMPUT350::Point2D slot(spacing * (x + 1), 200);
+                int type = rand() % 3;
+
+                float row = 100.0f + type * 100.0f;
+                CMPUT350::Point2D slot(spacing * (x + 1), row);
 
                 std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x, -20.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 70.0f));
-                path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
-                path.push_back(slot);
 
-                auto enemy2 = std::make_shared<Enemy2>(slot, path, randomizer.GetRand());
-                context->mEngineView->AddGameObject(enemy2);
+                if(type == 0){
+                    path.push_back(CMPUT350::Point2D(slot.x, -50.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x, 0.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
+                    path.push_back(slot);
+
+                    auto enemy = std::make_shared<Enemy1>(slot, path, randomizer.GetRand());
+                    context->mEngineView->AddGameObject(enemy);
+                } else if (type == 1){
+                    path.push_back(CMPUT350::Point2D(slot.x, -20.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x, 70.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x - 60.0f, 300.0f));
+                    path.push_back(slot);
+
+                    auto enemy2 = std::make_shared<Enemy2>(slot, path, randomizer.GetRand());
+                    context->mEngineView->AddGameObject(enemy2);
+                } else if (type == 2){
+                    path.push_back(CMPUT350::Point2D(slot.x -100.0f, -50.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x + 150.0f, 70.0f));
+                    path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
+                    path.push_back(slot);
+
+                    auto enemy3 = std::make_shared<Enemy3>(slot, path, randomizer.GetRand());
+                    context->mEngineView->AddGameObject(enemy3);
+                }
             }
-
-            for (int x = 0; x < count; x++)
-            {
-                CMPUT350::Point2D slot(spacing * (x + 1), 300);
-
-                std::vector<CMPUT350::Point2D> path;
-                path.push_back(CMPUT350::Point2D(slot.x -100.0f, -50.0f));
-                path.push_back(CMPUT350::Point2D(slot.x + 150.0f, 70.0f));
-                path.push_back(CMPUT350::Point2D(slot.x, 300.0f));
-                path.push_back(slot);
-
-                auto enemy3 = std::make_shared<Enemy3>(slot, path, randomizer.GetRand());
-                context->mEngineView->AddGameObject(enemy3);
-            }
-        
-
             context->currentFrame = 0;
             gameState = GameState::Playing;
             break;
